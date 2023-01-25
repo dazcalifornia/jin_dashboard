@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 
@@ -19,7 +18,10 @@ export default function Home() {
   }
   
   return (
-    <div>
+    <>
+      <div className='text-3xl text-green-600 p-2'>
+      Hello Geeks!
+    </div>
       <form onSubmit={handleSubmit}>
         <label>
           Email:
@@ -43,6 +45,6 @@ export default function Home() {
         <br />
         <button type="submit">Login</button>
       </form>
-    </div>
+    </>
   )
 }

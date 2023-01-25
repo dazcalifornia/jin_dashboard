@@ -1,6 +1,3 @@
-
-import {useTable} from 'react-table';
-
 import { useState,useEffect } from 'react'
 
 export default function Dashboard(){
