@@ -1,48 +1,44 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/login.module.css'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [formData,setFormdata] = useState({email:"",password:""})
   const router = useRouter()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit =  (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const username = formData.get('username');
-    const password = formData.get('password');
-    // check the credentials and get the server response
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({username,password}),
-      headers: { 'Content-Type': 'application/json' },
-    })
-    const data = await res.json();
-    if(data.status === 'success') {
-      setIsAuthenticated(true)
+    if(e.email === "" || e.password==="" ){
+      alert('please enter your email or password')
+    }else{
+      router.push('/dashboard')
+      setIsAuthenticated('true')
     }
+    console.log(formData)
   }
-  
-  useEffect(() => {
-    if(isAuthenticated) {
-        router.push('/dashboard')
-    }
-  },[isAuthenticated])
   
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <label>
-          Username:
-          <input type="text" name="username" placeholder="Enter your username" />
+          Email:
+          <input 
+            type="email"
+            name="email" 
+            placeholder="Enter your email"
+            onChange={(e) => setFormdata({...formData,email: e.target.value})}
+          />
         </label>
         <br />
         <label>
           Password:
-          <input type="password" name="password" placeholder="Enter your password" />
+          <input 
+            type="password"
+            name="password"
+            placeholder="Enter your password" 
+            onChange={(e)=> setFormdata({...formData,password:e.target.value})}
+          />
         </label>
         <br />
         <button type="submit">Login</button>
