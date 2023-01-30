@@ -1,6 +1,7 @@
 import { useState,useEffect } from 'react';
 
 export function GetSubjectData(id){
+
     const [subjectData, setsubjectData] = useState([])
     useEffect(()=>{
         fetch('http://localhost:8080/grades/${id}')

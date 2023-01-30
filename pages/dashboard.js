@@ -54,7 +54,10 @@ export default function Dashboard(){
               </thead>
               <tbody>
                 {data.map((course) => (
-                  <tr key={course.course_id}>
+                  <tr
+                  className="border-rounded px-4" 
+                  key={course.course_id}
+                  >
                     <td className="border px-4">{course.course_id}</td>
                     <td className="border px-4">{course.course_name}</td>
                     <td className="border px-4">{course.credit}</td>
