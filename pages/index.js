@@ -6,19 +6,44 @@ export default function Home() {
   const [formData,setFormdata] = useState({email:"",password:""})
   const router = useRouter()
 
-  const handleSubmit = (event) => {
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   if(formData.email === "" || formData.password ==="" ){
+  //     alert('please enter your email or password')
+  //   }else{
+  //     router.push('/dashboard')
+  //     setIsAuthenticated('true')
+  //   }
+  //   console.log(formData)
+  // }
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if(formData.email === "" || formData.password ==="" ){
       alert('please enter your email or password')
     }else{
-      router.push('/dashboard')
-      setIsAuthenticated('true')
+      try {
+        const response = await fetch('http://localhost:8080/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+        if (data.success) {
+          router.push('/dashboard')
+          setIsAuthenticated(true)
+        } else {
+          alert(data.message)
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
-    console.log(formData)
   }
-  
+
   return (
-    <div className="flex min-h-screen bg-gradient-to-tr from-slate-900 to-blue-900">
+    <div className="flex min-h-screen bg-white">
       <div className="fade-in text-center pt-20 relative pb-8 sm:mx-auto sm:px-1 sm:max-w-xl">
         <div className="px-4 pt-4 sm:px-0 ">
           <div className="max-w-sm bg-sky-200 rounded-lg border border-gray-200 shadow-md">

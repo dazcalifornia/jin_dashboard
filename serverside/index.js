@@ -15,6 +15,65 @@ const db = mysql.createConnection({
     password:'',
     database:'jin'
 })
+app.post('/login', function(req, res) {
+    
+    let email = req.body.email;
+    let password = req.body.password;
+    console.log(email,password)
+    let query = `SELECT * FROM Users WHERE email = '${email}' AND password = '${password}'`;
+  
+    db.query(query, function(error, results, fields) {
+      if (error) {
+        // handle the error
+        res.send({
+          'success': false,
+          'message': 'An error occurred while checking the email and password.'
+        });
+      } else {
+        if (results.length > 0) {
+          // email and password match
+          res.send({
+            'success': true,
+            'message': 'Login successful.'
+          });
+        } else {
+          // email and password don't match
+          res.send({
+            'success': false,
+            'message': 'Incorrect email or password.'
+          });
+        }
+      }
+    });
+});
+app.put('/editsubJect',function(req,res){
+    let courseId = req.body.data1
+    let courseName = req.body.data2
+    let credit = req.body.data3
+    let origin = req.body.origin
+
+    const sql = `UPDATE course SET course_id = '${courseId}', course_name = '${courseName}', credit = '${credit}' WHERE course_id = ${origin}`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ message: 'Data updated successfully' });
+  });
+})
+app.put('/editGrade',function(req,res){
+    let grade = req.body.grade
+    let owner = req.body.owner
+
+    const sql = `UPDATE Grades SET score = '${grade}'WHERE studentId = ${owner}`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ message: 'Data updated successfully' });
+  });
+})
 
 app.get('/grades',(req,res) =>{
     db.query("SELECT * FROM Grades",(err, result)=>{
