@@ -52,7 +52,7 @@ app.put('/editsubJect',function(req,res){
     let credit = req.body.data3
     let origin = req.body.origin
 
-    const sql = `UPDATE course SET course_id = '${courseId}', course_name = '${courseName}', credit = '${credit}' WHERE course_id = ${origin}`;
+    const sql = `UPDATE course SET course_id = '${courseId}', course_name = '${courseName}', credit = '${credit}' WHERE course_id = ${origin} '`;
 
   db.query(sql, (err, result) => {
     if (err) {
@@ -64,8 +64,9 @@ app.put('/editsubJect',function(req,res){
 app.put('/editGrade',function(req,res){
     let grade = req.body.grade
     let owner = req.body.owner
+    let subject = req.body.subject
 
-    const sql = `UPDATE Grades SET score = '${grade}'WHERE studentId = ${owner}`;
+    const sql = `UPDATE Grades SET score = '${grade}'WHERE studentId = '${owner}' AND courseId = '${subject}'`;
 
   db.query(sql, (err, result) => {
     if (err) {

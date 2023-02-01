@@ -16,7 +16,8 @@ export default function Dashboard(){
   const [editData,setEditData] = useState(false)
   const [gradeData, setGradeData] = useState({
     grade:"",
-    owner:""
+    owner:"",
+    subject:""
   })
 
   
@@ -30,7 +31,7 @@ export default function Dashboard(){
   const chageGrade = (event) => {
     setGradeData({
       ...gradeData,
-      [event.target.name]: event.target.value,
+      [event.target.grade]: event.target.value,
     });
   };
 
@@ -153,8 +154,8 @@ export default function Dashboard(){
                               className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
                               onClick={() => {
                                 setEditData(true)
-                                setGradeData({owner:item.studentId})
-                                console.log(item.studentId);
+                                setGradeData({owner:item.studentId,subject:item.courseId})
+                                console.log(gradeData);
                               }}
                               type="button"
                             >
@@ -272,8 +273,8 @@ export default function Dashboard(){
                       </label>
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="data1"
-                        name="data1"
+                        id="grade"
+                        name="grade"
                         type="text"
                         placeholder="Enter Data 1"
                         value={gradeData.grade}
