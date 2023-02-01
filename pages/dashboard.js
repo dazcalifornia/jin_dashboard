@@ -31,8 +31,9 @@ export default function Dashboard(){
   const chageGrade = (event) => {
     setGradeData({
       ...gradeData,
-      [event.target.grade]: event.target.value,
+      [event.target.name]: event.target.value,
     });
+    console.log(event.target.value)
   };
 
   
@@ -155,7 +156,7 @@ export default function Dashboard(){
                               onClick={() => {
                                 setEditData(true)
                                 setGradeData({owner:item.studentId,subject:item.courseId})
-                                console.log(gradeData);
+                                console.log(item.studentId,item.courseId);
                               }}
                               type="button"
                             >
