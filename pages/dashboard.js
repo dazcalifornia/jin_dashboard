@@ -1,26 +1,49 @@
-import { useRouter } from 'next/router';
-import { useState,useEffect } from 'react'
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import Cookies from "universal-cookie";
+import Menubar from "../components/menuBars";
 
-export default function Dashboard(){
-  const [data,setData] = useState([])
-  const [subjectData, setsubjectData] = useState([])
-  const [isOpen, setIsOpen] = useState(false)
-  const [editOpen,setEditOpen] = useState({isOpen:false,id:""})
+export default function Dashboard() {
+  const [data, setData] = useState([]);
+  const [subjectData, setsubjectData] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState({ isOpen: false, id: "" });
+
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredResults, setFilteredResults] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const cookies = new Cookies();
+
   const [formData, setFormData] = useState({
-      data1: '',
-      data2: '',
-      data3: '',
-      origin:''
+    data1: "",
+    data2: "",
+    data3: "",
+    origin: "",
   });
 
-  const [editData,setEditData] = useState(false)
+  const [editData, setEditData] = useState(false);
   const [gradeData, setGradeData] = useState({
-    grade:"",
-    owner:"",
-    subject:""
-  })
+    grade: "",
+    owner: "",
+    subject: "",
+  });
 
-  
+  const searchItems = (searchValue) => {
+    setSearchInput(searchValue);
+    if (searchInput !== "") {
+      const filteredData = data.filter((item) => {
+        return Object.values(item)
+          .join("")
+          .toLowerCase()
+          .includes(searchInput.toLowerCase());
+      });
+      setFilteredResults(filteredData);
+      console.log(filteredData);
+    } else {
+      setFilteredResults(data);
+    }
+  };
 
   const handleChange = (event) => {
     setFormData({
@@ -33,90 +56,126 @@ export default function Dashboard(){
       ...gradeData,
       [event.target.name]: event.target.value,
     });
-    console.log(event.target.value)
+    console.log(event.target.value);
   };
 
-  
+  const router = useRouter();
 
-  const router = useRouter()
-  useEffect(()=>{
-    fetch('http://localhost:8080/course')
-    .then(response => response.json())
-    .then(data => setData(data))
-    .catch(error => console.log(error));
-  },[])
-  const handleSignout=()=>{
-     router.replace('/')
-  }
-  
-  const subjectMenu=(id)=>{
+  // useEffect(()=>{
+  //   fetch('http://localhost:8080/course')
+  //   .then(response => response.json())
+  //   .then(data => setData(data))
+  //   .catch(error => console.log(error));
+  // },[])
 
+  useEffect(() => {
+    const cachedData = cookies.get("data");
+    if (cachedData) {
+      setData(cachedData);
+      setLoading(false);
+      // Fetch latest data from server
+      const fetchData = async () => {
+        const result = await fetch("http://localhost:8080/course", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
+        const updatedData = await result.json();
+        // Compare the cached data with the latest data
+        if (JSON.stringify(cachedData) !== JSON.stringify(updatedData)) {
+          // Update the cached data if it's different
+          cookies.set("data", updatedData, {
+            maxAge: 60 * 60 * 24,
+            sameSite: "strict",
+          });
+          setData(updatedData);
+        }
+      };
+      fetchData();
+    } else {
+      const fetchData = async () => {
+        const result = await fetch("http://localhost:8080/course", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
+        const data = await result.json();
+        setData(data);
+        setLoading(false);
+        cookies.set("data", data, { maxAge: 60 * 60 * 24, sameSite: "strict" });
+      };
+      fetchData();
+    }
+  }, []);
+
+  const handleSignout = () => {
+    router.replace("/");
+  };
+
+  const subjectMenu = (id) => {
     fetch(`http://localhost:8080/grades/${id}`)
-        .then(response => response.json())
-        .then(subjectData => setsubjectData(subjectData))
-        .catch(error => console.log(error));
-
-  }
-
+      .then((response) => response.json())
+      .then((subjectData) => setsubjectData(subjectData))
+      .catch((error) => console.log(error));
+  };
 
   const editSubject = async (event) => {
-      try {
-        const response = await fetch('http://localhost:8080/editsubJect', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
-        });
-        const data = await response.json();
-        if (data.success) {
-          
-        } else {
-          alert(data.message)
-        }
-      } catch (error) {
-        console.error(error);
-      }
-  }
-
-  const editGrade = async ()=>{
     try {
-
-      const response = await fetch('http://localhost:8080/editGrade', {
-        method: 'PUT',
+      const response = await fetch("http://localhost:8080/editsubJect", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(gradeData)
+        body: JSON.stringify(formData),
       });
       const data = await response.json();
       if (data.success) {
-        
       } else {
-        alert(data.message)
+        alert(data.message);
       }
     } catch (error) {
       console.error(error);
     }
-  }
+  };
+
+  const editGrade = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/editGrade", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(gradeData),
+      });
+      const data = await response.json();
+      if (data.success) {
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div>
-      <div className="flex min-h-screen bg-white ">
+      <Menubar />
+      <div className="flex min-h-screen bg-white">
         <div className="fade-in text-center pt-20 relative pb-8 sm:mx-auto sm:px-1 sm:max-w-xl">
-          <div className="px-4 pt-4 sm:px-0 ">
-            <nav>
-              <p className="text-3xl font-bold underline text-black">
-                จัดการรายววิชา และ แก้ไขเกรด
-              </p>
-              {/* make logout button */}
-              <button
-                className="bg-rose-500 text-white p-2 rounded-lg hover:bg-rose-700"
-                onClick={handleSignout}
-                type="button"
-              >
-                Logout
-              </button>
-            </nav>
+          <div className=" pt-4 sm:px-0 ">
+            <p className="text-3xl font-bold underline text-black">
+              จัดการรายววิชา และ แก้ไขเกรด
+            </p>
+            {/* make logout button */}
+            <button
+              className="bg-rose-500 text-white p-2 rounded-lg hover:bg-rose-700"
+              onClick={handleSignout}
+              type="button"
+            >
+              Logout
+            </button>
+
             {/* moddal */}
             {isOpen && (
               <div className="fixed bottom-0 inset-x-0 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center">
@@ -154,9 +213,12 @@ export default function Dashboard(){
                             <button
                               className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
                               onClick={() => {
-                                setEditData(true)
-                                setGradeData({owner:item.studentId,subject:item.courseId})
-                                console.log(item.studentId,item.courseId);
+                                setEditData(true);
+                                setGradeData({
+                                  owner: item.studentId,
+                                  subject: item.courseId,
+                                });
+                                console.log(item.studentId, item.courseId);
                               }}
                               type="button"
                             >
@@ -237,11 +299,9 @@ export default function Dashboard(){
                     <div className="flex items-center justify-end">
                       <button
                         className="bg-indigo-500 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        onClick={()=>{
-                          
-                          editSubject()
-                        }
-                      }
+                        onClick={() => {
+                          editSubject();
+                        }}
                       >
                         Submit
                       </button>
@@ -285,10 +345,9 @@ export default function Dashboard(){
                     <div className="flex items-center justify-end">
                       <button
                         className="bg-indigo-500 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        onClick={()=>{
-                          editGrade()
-                        }
-                      }
+                        onClick={() => {
+                          editGrade();
+                        }}
                       >
                         Submit
                       </button>
@@ -306,90 +365,125 @@ export default function Dashboard(){
               </div>
             )}
             {/* table */}
-            <div className="inline-block rounded-lg border shadow-2xl w-full">
-              <table className="table-auto">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">รหัสวิชา</th>
-                    <th className="px-4 py-2">ชื่อวิชา</th>
-                    <th className="px-4 py-2">หน่วยกิต</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((course) => (
-                    <tr className="border px-4" key={course.course_id}>
-                      <td className="border px-4">{course.course_id}</td>
-                      <td className="border px-4">{course.course_name}</td>
-                      <td className="border px-4">{course.credit}</td>
-                      <td className="border px-4 ">
-                        <button
-                          className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
-                          onClick={() => {
-                            setIsOpen(true);
-                            subjectMenu(course.course_id);
-                          }}
-                          type="button"
-                        >
-                          รายละเอียด
-                        </button>
-                        <button
-                          className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
-                          onClick={() => {
-                            setFormData({origin:course.course_id})
-                            setEditOpen({ isOpen: true, id: course.course_id });
-                          }}
-                          type="button"
-                        >
-                          แก้ไข
-                        </button>
-                      </td>
+
+            {loading ? (
+              <p>loading...</p>
+            ) : (
+              <div className="inline-block rounded-lg border shadow-2xl w-full">
+                {/* input search table */}
+                <input
+                  type="text"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="search"
+                  name="search"
+                  placeholder="ค้นหา"
+                  value={searchInput}
+                  onChange={(e) => {
+                    console.log('search input:',searchInput);
+                    setSearchInput(e.target.value);
+                  }}
+                />
+                <button
+                  className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
+                  onClick={() => {
+                    searchItems();
+                  }}
+                >
+                  search
+                </button>
+                {filteredResults ? (
+                  <table className="table-auto">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">รหัสวิชา</th>
+                      <th className="px-4 py-2">ชื่อวิชา</th>
+                      <th className="px-4 py-2">หน่วยกิต</th>
+                      <th></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {/* <table className="border-collapse table-auto w-full text-sm">
-              <thead>
-                <tr>
-                  <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-black text-left">
-                    Name
-                  </th>
-                  <th className="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-black text-left">
-                    subjectname
-                  </th>
-                  <th className="border-b dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-black text-left">
-                    Grade
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-slate-800">
-                {subjectData.map((item) => (
-                  <tr key={item.studentId}>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                      {item.Std_name}
-                    </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                      {item.Course_name}
-                    </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                      {item.score}
-                    </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                      <button
-                        className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
-                        onClick={() => {
-                          console.log(item.studentId);
-                        }}
-                        type="button"
-                      >
-                        แก้ไข
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table> */}
+                  </thead>
+                  <tbody>
+                    {data.map((course) => (
+                      <tr className="border px-4" key={course.course_id}>
+                        <td className="border px-4">{course.course_id}</td>
+                        <td className="border px-4">{course.course_name}</td>
+                        <td className="border px-4">{course.credit}</td>
+                        <td className="border px-4 ">
+                          <button
+                            className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
+                            onClick={() => {
+                              setIsOpen(true);
+                              subjectMenu(course.course_id);
+                            }}
+                            type="button"
+                          >
+                            รายละเอียด
+                          </button>
+                          <button
+                            className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
+                            onClick={() => {
+                              setFormData({ origin: course.course_id });
+                              setEditOpen({
+                                isOpen: true,
+                                id: course.course_id,
+                              });
+                            }}
+                            type="button"
+                          >
+                            แก้ไข
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                ):(
+                  <table className="table-auto">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">รหัสวิชา</th>
+                      <th className="px-4 py-2">ชื่อวิชา</th>
+                      <th className="px-4 py-2">หน่วยกิต</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredResults.map((course) => (
+                      <tr className="border px-4" key={course.course_id}>
+                        <td className="border px-4">{course.course_id}</td>
+                        <td className="border px-4">{course.course_name}</td>
+                        <td className="border px-4">{course.credit}</td>
+                        <td className="border px-4 ">
+                          <button
+                            className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
+                            onClick={() => {
+                              setIsOpen(true);
+                              subjectMenu(course.course_id);
+                            }}
+                            type="button"
+                          >
+                            รายละเอียด
+                          </button>
+                          <button
+                            className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
+                            onClick={() => {
+                              setFormData({ origin: course.course_id });
+                              setEditOpen({
+                                isOpen: true,
+                                id: course.course_id,
+                              });
+                            }}
+                            type="button"
+                          >
+                            แก้ไข
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

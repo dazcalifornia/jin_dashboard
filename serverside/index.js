@@ -51,6 +51,7 @@ app.put('/editsubJect',function(req,res){
     let courseName = req.body.data2
     let credit = req.body.data3
     let origin = req.body.origin
+    console.log(courseId,courseName,credit,origin)
 
     const sql = `UPDATE course SET course_id = '${courseId}', course_name = '${courseName}', credit = '${credit}' WHERE course_id = ${origin}`;
 

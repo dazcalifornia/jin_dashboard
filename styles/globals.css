@@ -4,6 +4,158 @@
 @tailwind screens;
 
 
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Kanit', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.fade-in {
+  opacity: 1;
+  animation-name: fadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 600ms;
+}
+
+@keyframes fadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.link-underline {
+  border-bottom-width: 0;
+  background-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+  background-size: 0 3px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size .5s ease-in-out;
+}
+
+.link-underline-black {
+  background-image: linear-gradient(transparent, transparent), linear-gradient(#F2C, #F2C)
+}
+
+.link-underline:hover {
+  background-size: 100% 3px;
+  background-position: 0 100%
+}
+
+.header-nav {
+  padding: 0;
+  min-height: 4.5rem;
+  transition: 300ms ease all;
+  /* background: white; */
+}
+
+.header-nav.nav-floating {
+  margin: 1.3rem 2.2rem 0;
+  border-radius: 20px;
+  position: fixed;
+  z-index: 12;
+  right: 0;
+  width: calc(100vw - (100vw - 100%) - calc(2.2rem * 2));
+
+}
+
+.navbar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  /* background-color: white; */
+  padding: 15px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: black;
+}
+
+.logo {
+
+  margin-left: 15px;
+}
+
+.list {
+  margin-left: auto;
+  width: auto;
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.list a {
+  padding-right: 0em;
+  font-weight: 400;
+  text-decoration: none;
+
+  width: 100%;
+}
+
+.list a:hover {
+  color: #E83E8C;
+}
+
+.list li a {
+  margin-right: 15px;
+  padding-top: 15px;
+  padding: 0px 10px;
+
+  transition: all 0.3s ease 0s;
+}
+
+#toggle,
+.navbar label {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .menu {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: height 0.5s ease-out;
+  }
+
+  .list {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .navbar label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  #toggle:checked~.menu {
+    max-height: 100%;
+  }
+
+}
+
+
 /* table {
     border-collapse: separate;
     border-spacing: 0;
