@@ -15,6 +15,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const cookies = new Cookies();
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  function handleFileUpload(event) {
+    setSelectedFile(event.target.files[0]);
+  }
+
+
   const [formData, setFormData] = useState({
     data1: "",
     data2: "",
@@ -164,18 +171,29 @@ export default function Dashboard() {
       <div className="flex min-h-screen bg-white">
         <div className="fade-in text-center pt-20 relative pb-8 sm:mx-auto sm:px-1 sm:max-w-xl">
           <div className=" pt-4 sm:px-0 ">
-            <p className="text-3xl font-bold underline text-black">
+            <p className="text-3xl mt-4 font-bold underline text-black">
               จัดการรายววิชา และ แก้ไขเกรด
             </p>
             {/* make logout button */}
-            <button
+            {/* <button
               className="bg-rose-500 text-white p-2 rounded-lg hover:bg-rose-700"
               onClick={handleSignout}
               type="button"
             >
               Logout
+            </button> */}
+
+            {/* addfile */}
+            <button
+              className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
+              onClick={handleFileUpload}
+              type="button"
+            >
+              addFile
             </button>
 
+            <input type="file" onChange={handleFileUpload} />
+            {selectedFile && <p>File selected: {selectedFile.name}</p>}
             {/* moddal */}
             {isOpen && (
               <div className="fixed bottom-0 inset-x-0 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center">
@@ -364,125 +382,82 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-            {/* table */}
+            {/* input search table */}
+            <input
+              type="text"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="search"
+              name="search"
+              placeholder="ค้นหา"
+              value={searchInput}
+              onChange={(e) => {
+                console.log("search input:", searchInput);
+                setSearchInput(e.target.value);
+              }}
+            />
+            <button
+              className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
+              onClick={() => {
+                searchItems();
+              }}
+            >
+              search
+            </button>
 
-            {loading ? (
-              <p>loading...</p>
+            {filteredResults ? (
+              <>
+                {/* table */}
+                <div className="inline-block rounded-lg border shadow-2xl w-full">
+                  <table className="table-auto">
+                    <thead>
+                      <tr>
+                        <th className="px-4 py-2">รหัสวิชา</th>
+                        <th className="px-4 py-2">ชื่อวิชา</th>
+                        <th className="px-4 py-2">หน่วยกิต</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((course) => (
+                        <tr className="border px-4" key={course.course_id}>
+                          <td className="border px-4">{course.course_id}</td>
+                          <td className="border px-4">{course.course_name}</td>
+                          <td className="border px-4">{course.credit}</td>
+                          <td className="border px-4 ">
+                            <button
+                              className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
+                              onClick={() => {
+                                setIsOpen(true);
+                                subjectMenu(course.course_id);
+                              }}
+                              type="button"
+                            >
+                              รายละเอียด
+                            </button>
+                            <button
+                              className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
+                              onClick={() => {
+                                setFormData({ origin: course.course_id });
+                                setEditOpen({
+                                  isOpen: true,
+                                  id: course.course_id,
+                                });
+                              }}
+                              type="button"
+                            >
+                              แก้ไข
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             ) : (
-              <div className="inline-block rounded-lg border shadow-2xl w-full">
-                {/* input search table */}
-                <input
-                  type="text"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="search"
-                  name="search"
-                  placeholder="ค้นหา"
-                  value={searchInput}
-                  onChange={(e) => {
-                    console.log('search input:',searchInput);
-                    setSearchInput(e.target.value);
-                  }}
-                />
-                <button
-                  className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
-                  onClick={() => {
-                    searchItems();
-                  }}
-                >
-                  search
-                </button>
-                {filteredResults ? (
-                  <table className="table-auto">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2">รหัสวิชา</th>
-                      <th className="px-4 py-2">ชื่อวิชา</th>
-                      <th className="px-4 py-2">หน่วยกิต</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((course) => (
-                      <tr className="border px-4" key={course.course_id}>
-                        <td className="border px-4">{course.course_id}</td>
-                        <td className="border px-4">{course.course_name}</td>
-                        <td className="border px-4">{course.credit}</td>
-                        <td className="border px-4 ">
-                          <button
-                            className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
-                            onClick={() => {
-                              setIsOpen(true);
-                              subjectMenu(course.course_id);
-                            }}
-                            type="button"
-                          >
-                            รายละเอียด
-                          </button>
-                          <button
-                            className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
-                            onClick={() => {
-                              setFormData({ origin: course.course_id });
-                              setEditOpen({
-                                isOpen: true,
-                                id: course.course_id,
-                              });
-                            }}
-                            type="button"
-                          >
-                            แก้ไข
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                ):(
-                  <table className="table-auto">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2">รหัสวิชา</th>
-                      <th className="px-4 py-2">ชื่อวิชา</th>
-                      <th className="px-4 py-2">หน่วยกิต</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredResults.map((course) => (
-                      <tr className="border px-4" key={course.course_id}>
-                        <td className="border px-4">{course.course_id}</td>
-                        <td className="border px-4">{course.course_name}</td>
-                        <td className="border px-4">{course.credit}</td>
-                        <td className="border px-4 ">
-                          <button
-                            className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
-                            onClick={() => {
-                              setIsOpen(true);
-                              subjectMenu(course.course_id);
-                            }}
-                            type="button"
-                          >
-                            รายละเอียด
-                          </button>
-                          <button
-                            className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
-                            onClick={() => {
-                              setFormData({ origin: course.course_id });
-                              setEditOpen({
-                                isOpen: true,
-                                id: course.course_id,
-                              });
-                            }}
-                            type="button"
-                          >
-                            แก้ไข
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                )}
-              </div>
+              <>
+                <p>hi</p>
+              </>
             )}
           </div>
         </div>
