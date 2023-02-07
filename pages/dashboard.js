@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Cookies from "universal-cookie";
 import Menubar from "../components/menuBars";
+import ClassTable from "../components/Classtable";
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
@@ -169,7 +170,9 @@ export default function Dashboard() {
     <div>
       <Menubar />
       <div className="flex min-h-screen bg-white">
-        <div className="fade-in text-center pt-20 relative pb-8 sm:mx-auto sm:px-1 sm:max-w-xl">
+
+        <div className="fade-in text-center pt-20 relative pb-8 sm:mx-auto sm:px-1 ">
+          
           <div className=" pt-4 sm:px-0 ">
             <p className="text-3xl mt-4 font-bold underline text-black">
               จัดการรายววิชา และ แก้ไขเกรด
@@ -382,83 +385,9 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-            {/* input search table */}
-            <input
-              type="text"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="search"
-              name="search"
-              placeholder="ค้นหา"
-              value={searchInput}
-              onChange={(e) => {
-                console.log("search input:", searchInput);
-                setSearchInput(e.target.value);
-              }}
-            />
-            <button
-              className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
-              onClick={() => {
-                searchItems();
-              }}
-            >
-              search
-            </button>
 
-            {filteredResults ? (
-              <>
-                {/* table */}
-                <div className="inline-block rounded-lg border shadow-2xl w-full">
-                  <table className="table-auto">
-                    <thead>
-                      <tr>
-                        <th className="px-4 py-2">รหัสวิชา</th>
-                        <th className="px-4 py-2">ชื่อวิชา</th>
-                        <th className="px-4 py-2">หน่วยกิต</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.map((course) => (
-                        <tr className="border px-4" key={course.course_id}>
-                          <td className="border px-4">{course.course_id}</td>
-                          <td className="border px-4">{course.course_name}</td>
-                          <td className="border px-4">{course.credit}</td>
-                          <td className="border px-4 ">
-                            <button
-                              className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
-                              onClick={() => {
-                                setIsOpen(true);
-                                subjectMenu(course.course_id);
-                              }}
-                              type="button"
-                            >
-                              รายละเอียด
-                            </button>
-                            <button
-                              className="bg-amber-500 text-white p-2 rounded-lg hover:bg-amber-700"
-                              onClick={() => {
-                                setFormData({ origin: course.course_id });
-                                setEditOpen({
-                                  isOpen: true,
-                                  id: course.course_id,
-                                });
-                              }}
-                              type="button"
-                            >
-                              แก้ไข
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            ) : (
-              <>
-                <p>hi</p>
-              </>
-            )}
+            {/* table */}
+            <ClassTable/>
           </div>
         </div>
       </div>
