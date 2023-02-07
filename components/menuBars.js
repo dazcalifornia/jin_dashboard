@@ -40,7 +40,7 @@ export default function Menubar() {
           </li>
           <li>
             <Link
-              href="https://github.com/dazcalifornia/franx-webpage"
+
               scroll={false}
             >
               <button 
