@@ -90,7 +90,7 @@ export default function ClassTable(){
             <tbody>
               {data.map((course) => (
                 <tr
-                  className="border px-4 hover:bg-slate-400 "
+                  className="border px-4 hover:bg-slate-200 "
                   key={course.course_id}
                 >
                   <td className="border px-4">{course.course_id}</td>

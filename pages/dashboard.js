@@ -170,9 +170,7 @@ export default function Dashboard() {
     <div>
       <Menubar />
       <div className="flex min-h-screen bg-white">
-
         <div className="fade-in text-center pt-20 relative pb-8 sm:mx-auto sm:px-1 ">
-          
           <div className=" pt-4 sm:px-0 ">
             <p className="text-3xl mt-4 font-bold underline text-black">
               จัดการรายววิชา และ แก้ไขเกรด
@@ -187,14 +185,41 @@ export default function Dashboard() {
             </button> */}
 
             {/* addfile */}
+
+            <form>
+              <input type="file" name="file" />
+              <button
+                className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
+                type="button"
+                onClick={()=>{
+                fetch("/upload", {
+                  method: "POST",
+                  body: selectedFile,
+                })
+                  .then((res) => res.text())
+                  .then((data) => console.log(data))
+                  .catch((error) => console.error(error));
+                }}
+              >
+                Upload
+              </button>
+            </form>
             <button
               className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
-              onClick={handleFileUpload}
+              onClick={()=>{
+                fetch("http://localhost:8080/upload", {
+                  method: "POST",
+                  body: selectedFile,
+                })
+                  .then((res) => res.text())
+                  .then((data) => console.log(data))
+                  .catch((error) => console.error(error));
+                
+              }}
               type="button"
             >
               addFile
             </button>
-
             <input type="file" onChange={handleFileUpload} />
             {selectedFile && <p>File selected: {selectedFile.name}</p>}
             {/* moddal */}
@@ -387,7 +412,7 @@ export default function Dashboard() {
             )}
 
             {/* table */}
-            <ClassTable/>
+            <ClassTable />
           </div>
         </div>
       </div>

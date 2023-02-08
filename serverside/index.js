@@ -32,34 +32,43 @@ const storage = multer.diskStorage({
   const upload = multer({ 
     storage: storage,
     limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB limit
+    dest: "uploads/"
  });
 
-app.post("/upload", upload.single("file"), (req, res) => {
-  const workbook = new Excel.Workbook();
-  workbook.xlsx.readFile(req.file.path).then(() => {
-    const worksheet = workbook.getWorksheet(1);
-    const rows = worksheet.getRows();
-    rows.forEach((row) => {
-      // Prepare the values for the SQL query
-      let values = [
-        row.getCell(1).value,
-        row.getCell(2).value,
-        row.getCell(3).value,
-      ];
-      connection.query(
-        "INSERT INTO your_table (col1, col2, col3) VALUES (?, ?, ?)",
-        values,
-        (err, results) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-        }
-      );
-    });
-    res.send("File uploaded and data inserted into the database");
+ app.post("/upload", upload.single("file"), (req, res) => {
+    const file = req.file;
+    console.log(file);
+    res.send('File uploaded');
   });
-});
+
+// app.post("/upload", upload.single("file"), (req, res) => {
+//   const workbook = new Excel.Workbook();
+//   workbook.xlsx.readFile(req.file.path).then(() => {
+//     const worksheet = workbook.getWorksheet(1);
+//     const rows = worksheet.getRows();
+//     rows.forEach((row) => {
+//       // Prepare the values for the SQL query
+//       let values = [
+//         row.getCell(1).value,
+//         row.getCell(2).value,
+//         row.getCell(3).value,
+//         row.getCell(4).value,
+//         row.getCell(5).value,
+//       ];
+//       connection.query(
+//         "INSERT INTO Grades (studentId, Std_name, courseId, Course_name, score) VALUES (?, ?, ?, ?, ?)",
+//         values,
+//         (err, results) => {
+//           if (err) {
+//             console.log(err);
+//             return;
+//           }
+//         }
+//       );
+//     });
+//     res.send("File uploaded and data inserted into the database");
+//   });
+// });
 
 app.post("/login", function (req, res) {
   let email = req.body.email;
