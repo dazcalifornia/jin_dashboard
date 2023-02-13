@@ -62,9 +62,12 @@ export default function ClassTable(){
     return (
       <>
         {/* input search table */}
+        <div 
+            className="mx-10 flex-row flex justify-center py-7"
+        >
         <input
           type="text"
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-3/5"
           id="search"
           name="search"
           placeholder="ค้นหา"
@@ -82,6 +85,10 @@ export default function ClassTable(){
         >
           search
         </button>
+        </div>
+        
+
+        {/* table */}
         <div className="inline-block rounded-lg border shadow-2xl mx-8">
           <table className="table-fixed w-full">
             <thead>

@@ -6,12 +6,17 @@
 
 
 html,
+
+
 body {
   padding: 0;
   margin: 0;
   font-family: 'Kanit', sans-serif;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: no-repeat url(//s.ytimg.com/yt/imgbin/www-refreshbg-vflC3wnbM.png) 0 0;
+  background-color: #EBEBEB;
+  background-repeat: repeat;
 }
 
 a {
