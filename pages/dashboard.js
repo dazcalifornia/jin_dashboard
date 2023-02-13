@@ -5,13 +5,22 @@ import Menubar from "../components/menuBars";
 import ClassTable from "../components/Classtable";
 
 export default function Dashboard() {
-
+  const [data, setData] = useState([]);
   const [subjectData, setsubjectData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editOpen, setEditOpen] = useState({ isOpen: false, id: "" });
 
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredResults, setFilteredResults] = useState([]);
 
+  const [loading, setLoading] = useState(true);
   const cookies = new Cookies();
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  function handleFileUpload(event) {
+    setSelectedFile(event.target.files[0]);
+  }
 
 
   const [formData, setFormData] = useState({
@@ -27,6 +36,22 @@ export default function Dashboard() {
     owner: "",
     subject: "",
   });
+
+  const searchItems = (searchValue) => {
+    setSearchInput(searchValue);
+    if (searchInput !== "") {
+      const filteredData = data.filter((item) => {
+        return Object.values(item)
+          .join("")
+          .toLowerCase()
+          .includes(searchInput.toLowerCase());
+      });
+      setFilteredResults(filteredData);
+      console.log(filteredData);
+    } else {
+      setFilteredResults(data);
+    }
+  };
 
   const handleChange = (event) => {
     setFormData({
@@ -51,6 +76,51 @@ export default function Dashboard() {
   //   .catch(error => console.log(error));
   // },[])
 
+  useEffect(() => {
+    const cachedData = cookies.get("data");
+    if (cachedData) {
+      setData(cachedData);
+      setLoading(false);
+      // Fetch latest data from server
+      const fetchData = async () => {
+        const result = await fetch("http://localhost:8080/course", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
+        const updatedData = await result.json();
+        // Compare the cached data with the latest data
+        if (JSON.stringify(cachedData) !== JSON.stringify(updatedData)) {
+          // Update the cached data if it's different
+          cookies.set("data", updatedData, {
+            maxAge: 60 * 60 * 24,
+            sameSite: "strict",
+          });
+          setData(updatedData);
+        }
+      };
+      fetchData();
+    } else {
+      const fetchData = async () => {
+        const result = await fetch("http://localhost:8080/course", {
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
+        const data = await result.json();
+        setData(data);
+        setLoading(false);
+        cookies.set("data", data, { maxAge: 60 * 60 * 24, sameSite: "strict" });
+      };
+      fetchData();
+    }
+  }, []);
+
+  const handleSignout = () => {
+    router.replace("/");
+  };
 
   const subjectMenu = (id) => {
     fetch(`http://localhost:8080/grades/${id}`)
@@ -105,6 +175,53 @@ export default function Dashboard() {
             <p className="text-3xl mt-4 font-bold underline text-black">
               จัดการรายววิชา และ แก้ไขเกรด
             </p>
+            {/* make logout button */}
+            {/* <button
+              className="bg-rose-500 text-white p-2 rounded-lg hover:bg-rose-700"
+              onClick={handleSignout}
+              type="button"
+            >
+              Logout
+            </button> */}
+
+            {/* addfile */}
+
+            <form>
+              <input type="file" name="file" />
+              <button
+                className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
+                type="button"
+                onClick={()=>{
+                fetch("/upload", {
+                  method: "POST",
+                  body: selectedFile,
+                })
+                  .then((res) => res.text())
+                  .then((data) => console.log(data))
+                  .catch((error) => console.error(error));
+                }}
+              >
+                Upload
+              </button>
+            </form>
+            <button
+              className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
+              onClick={()=>{
+                fetch("http://localhost:8080/upload", {
+                  method: "POST",
+                  body: selectedFile,
+                })
+                  .then((res) => res.text())
+                  .then((data) => console.log(data))
+                  .catch((error) => console.error(error));
+                
+              }}
+              type="button"
+            >
+              addFile
+            </button>
+            <input type="file" onChange={handleFileUpload} />
+            {selectedFile && <p>File selected: {selectedFile.name}</p>}
             {/* moddal */}
             {isOpen && (
               <div className="fixed bottom-0 inset-x-0 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center">

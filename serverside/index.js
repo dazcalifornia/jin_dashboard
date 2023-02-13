@@ -12,18 +12,18 @@ app.use(cors());
 app.use(express.json());
 
 // const db = mysql.createConnection({
-//   host: "dev.franx.dev",
-//   user: "franx",
-//   password: "dazproperty",
+//   host: "localhost",
+//   user: "root",
+//   password: "",
 //   database: "jin",
 // });
-
 const db = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "",
+  host: "dev.franx.dev",
+  user: "franx",
+  password: "dazproperty",
   database: "jin",
 });
+
 
 
 const storage = multer.diskStorage({
