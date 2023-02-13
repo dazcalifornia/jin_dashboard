@@ -7,8 +7,13 @@ export default function ClassTable(){
     const [data, setData] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [filteredData, setFilteredData] = useState([]);
+    const [orginalContent, setOriginalcontent] = useState([])
 
     const searchItems = () => {
+      setOriginalcontent(data)
+        if(searchInput == ""){
+          setData(orginalContent)
+        } 
         setData(prevData => prevData.filter(item => item.course_id.toLowerCase().includes(searchInput.toLowerCase())))
       }
       
