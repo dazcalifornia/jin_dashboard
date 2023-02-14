@@ -123,6 +123,7 @@ export default function Dashboard() {
   };
 
   const subjectMenu = (id) => {
+    setsubjectData([])
     fetch(`https://3a88-45-136-254-11.ap.ngrok.io/grades/${id}`)
       .then((response) => response.json())
       .then((subjectData) => setsubjectData(subjectData))
