@@ -22,7 +22,7 @@ export default function Home() {
       alert('please enter your email or password')
     }else{
       try {
-        const response = await fetch('http://localhost:8080/login', {
+        const response = await fetch('http://https://3a88-45-136-254-11.ap.ngrok.io/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

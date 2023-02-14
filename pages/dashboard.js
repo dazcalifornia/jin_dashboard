@@ -70,7 +70,7 @@ export default function Dashboard() {
   const router = useRouter();
 
   // useEffect(()=>{
-  //   fetch('http://localhost:8080/course')
+  //   fetch('http://https://3a88-45-136-254-11.ap.ngrok.io/course')
   //   .then(response => response.json())
   //   .then(data => setData(data))
   //   .catch(error => console.log(error));
@@ -83,7 +83,7 @@ export default function Dashboard() {
       setLoading(false);
       // Fetch latest data from server
       const fetchData = async () => {
-        const result = await fetch("http://localhost:8080/course", {
+        const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
           headers: {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
@@ -103,7 +103,7 @@ export default function Dashboard() {
       fetchData();
     } else {
       const fetchData = async () => {
-        const result = await fetch("http://localhost:8080/course", {
+        const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
           headers: {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
@@ -123,7 +123,7 @@ export default function Dashboard() {
   };
 
   const subjectMenu = (id) => {
-    fetch(`http://localhost:8080/grades/${id}`)
+    fetch(`http://https://3a88-45-136-254-11.ap.ngrok.io/grades/${id}`)
       .then((response) => response.json())
       .then((subjectData) => setsubjectData(subjectData))
       .catch((error) => console.log(error));
@@ -131,7 +131,7 @@ export default function Dashboard() {
 
   const editSubject = async (event) => {
     try {
-      const response = await fetch("http://localhost:8080/editsubJect", {
+      const response = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/editsubJect", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +150,7 @@ export default function Dashboard() {
 
   const editGrade = async () => {
     try {
-      const response = await fetch("http://localhost:8080/editGrade", {
+      const response = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/editGrade", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -192,7 +192,7 @@ export default function Dashboard() {
         setLoading(false);
         // Fetch latest data from server
         const fetchData = async () => {
-          const result = await fetch("http://localhost:8080/course", {
+          const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
             headers: {
               "Cache-Control": "no-cache",
               Pragma: "no-cache",
@@ -212,7 +212,7 @@ export default function Dashboard() {
         fetchData();
       } else {
         const fetchData = async () => {
-          const result = await fetch("http://localhost:8080/course", {
+          const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
             headers: {
               "Cache-Control": "no-cache",
               Pragma: "no-cache",
@@ -271,7 +271,7 @@ export default function Dashboard() {
             <button
               className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
               onClick={()=>{
-                fetch("http://localhost:8080/upload", {
+                fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/upload", {
                   method: "POST",
                   body: selectedFile,
                 })
