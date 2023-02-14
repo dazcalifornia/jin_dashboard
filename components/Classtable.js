@@ -59,30 +59,35 @@ export default function ClassTable(){
           fetchData();
         }
       }, []);
+
+
     return (
       <>
-        {/* input search table */}
-        <input
-          type="text"
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="search"
-          name="search"
-          placeholder="ค้นหา"
-          value={searchInput}
-          onChange={(e) => {
-            console.log("search input:", searchInput);
-            setSearchInput(e.target.value);
-          }}
-        />
-        <button
-          className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
-          onClick={() => {
-            searchItems();
-          }}
-        >
-          search
-        </button>
-        <div className="inline-block rounded-lg border shadow-2xl mx-8">
+        <div className='flex-row mb-4'>
+          {/* input search table */}
+          <input
+            type="text"
+            className="shadow appearance-none border rounded w-3/5 py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="search"
+            name="search"
+            placeholder="ค้นหา"
+            value={searchInput}
+            onChange={(e) => {
+              console.log("search input:", searchInput);
+              setSearchInput(e.target.value);
+            }}
+          />
+          <button
+            className="bg-sky-500 text-white p-2 ml-4 rounded-lg hover:bg-sky-700"
+            onClick={() => {
+              searchItems();
+            }}
+          >
+            search
+          </button>
+        </div>
+
+        <div className="inline-block rounded-t-xl border shadow-2xl mx-8 bg-white">
           <table className="table-fixed w-full">
             <thead>
               <tr>
@@ -95,13 +100,13 @@ export default function ClassTable(){
             <tbody>
               {data.map((course) => (
                 <tr
-                  className="border px-4 hover:bg-slate-200 "
+                  className=" px-4 hover:bg-slate-200 "
                   key={course.course_id}
                 >
-                  <td className="border px-4">{course.course_id}</td>
-                  <td className="border px-4 text-sm">{course.course_name}</td>
-                  <td className="border px-4">{course.credit}</td>
-                  <td className="border px-4 ">
+                  <td className=" px-4">{course.course_id}</td>
+                  <td className=" px-4 text-sm">{course.course_name}</td>
+                  <td className=" px-4">{course.credit}</td>
+                  <td className=" px-4 ">
                     <button
                       className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-700"
                       onClick={() => {

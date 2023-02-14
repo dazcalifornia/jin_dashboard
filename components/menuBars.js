@@ -6,7 +6,7 @@ export default function Menubar() {
 
   const router = useRouter()
   return (
-    <nav className="header-nav nav-floating navbar shadow-md bg-emerald-500/70 backdrop-filter backdrop-blur-sm">
+    <nav className="header-nav nav-floating navbar shadow-md bg-emerald-400/70 backdrop-filter backdrop-blur-sm">
       <Link href="" scroll={false}>
         <p className="logo">KU-CS course Management</p>
       </Link>
