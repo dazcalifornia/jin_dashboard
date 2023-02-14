@@ -83,7 +83,7 @@ export default function Dashboard() {
       setLoading(false);
       // Fetch latest data from server
       const fetchData = async () => {
-        const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
+        const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
           headers: {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
@@ -103,7 +103,7 @@ export default function Dashboard() {
       fetchData();
     } else {
       const fetchData = async () => {
-        const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
+        const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
           headers: {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
@@ -131,7 +131,7 @@ export default function Dashboard() {
 
   const editSubject = async (event) => {
     try {
-      const response = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/editsubJect", {
+      const response = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/editsubJect", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +150,7 @@ export default function Dashboard() {
 
   const editGrade = async () => {
     try {
-      const response = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/editGrade", {
+      const response = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/editGrade", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -192,7 +192,7 @@ export default function Dashboard() {
         setLoading(false);
         // Fetch latest data from server
         const fetchData = async () => {
-          const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
+          const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
             headers: {
               "Cache-Control": "no-cache",
               Pragma: "no-cache",
@@ -212,7 +212,7 @@ export default function Dashboard() {
         fetchData();
       } else {
         const fetchData = async () => {
-          const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
+          const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
             headers: {
               "Cache-Control": "no-cache",
               Pragma: "no-cache",
@@ -271,7 +271,7 @@ export default function Dashboard() {
             <button
               className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
               onClick={()=>{
-                fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/upload", {
+                fetch("https://3a88-45-136-254-11.ap.ngrok.io/upload", {
                   method: "POST",
                   body: selectedFile,
                 })

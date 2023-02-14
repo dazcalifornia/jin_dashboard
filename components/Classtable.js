@@ -25,7 +25,7 @@ export default function ClassTable(){
           setLoading(false);
           // Fetch latest data from server
           const fetchData = async () => {
-            const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
+            const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
               headers: {
                 "Cache-Control": "no-cache",
                 Pragma: "no-cache",
@@ -45,7 +45,7 @@ export default function ClassTable(){
           fetchData();
         } else {
           const fetchData = async () => {
-            const result = await fetch("http://https://3a88-45-136-254-11.ap.ngrok.io/course", {
+            const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
               headers: {
                 "Cache-Control": "no-cache",
                 Pragma: "no-cache",
