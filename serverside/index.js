@@ -4,6 +4,10 @@ const mysql = require("mysql");
 const multer = require('multer');
 const Excel = require('exceljs');
 
+const fs = require('fs');
+const xlsx = require('xlsx');
+
+
 const app = express();
 const port = 8080;
 
@@ -28,7 +32,7 @@ const db = mysql.createConnection({
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-      cb(null, './uploads/');
+      cb(null, '/uploads/');
     },
     filename: function(req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -39,8 +43,8 @@ const storage = multer.diskStorage({
   const upload = multer({ 
     storage: storage,
     limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB limit
-    dest: "uploads/"
  });
+
 
  app.post("/upload", upload.single("file"), (req, res) => {
     const file = req.file;
@@ -48,35 +52,47 @@ const storage = multer.diskStorage({
     res.send('File uploaded');
   });
 
-// app.post("/upload", upload.single("file"), (req, res) => {
-//   const workbook = new Excel.Workbook();
-//   workbook.xlsx.readFile(req.file.path).then(() => {
-//     const worksheet = workbook.getWorksheet(1);
-//     const rows = worksheet.getRows();
-//     rows.forEach((row) => {
-//       // Prepare the values for the SQL query
-//       let values = [
-//         row.getCell(1).value,
-//         row.getCell(2).value,
-//         row.getCell(3).value,
-//         row.getCell(4).value,
-//         row.getCell(5).value,
-//       ];
-//       connection.query(
-//         "INSERT INTO Grades (studentId, Std_name, courseId, Course_name, score) VALUES (?, ?, ?, ?, ?)",
-//         values,
-//         (err, results) => {
-//           if (err) {
-//             console.log(err);
-//             return;
-//           }
-//         }
-//       );
-//     });
-//     res.send("File uploaded and data inserted into the database");
-//   });
-// });
 
+ app.post("/uploader", upload.single("file"), (req, res) => {
+   const workbook = new Excel.Workbook();
+   workbook.xlsx.readFile(req.file.path).then(() => {
+     const worksheet = workbook.getWorksheet(1);
+     const rows = worksheet.getRows();
+     rows.forEach((row) => {
+       // Prepare the values for the SQL query
+       let values = [
+         row.getCell(1).value,
+         row.getCell(2).value,
+         row.getCell(3).value,
+         row.getCell(4).value,
+         row.getCell(5).value,
+       ];
+       connection.query(
+         "INSERT INTO Grades (studentId, Std_name, courseId, Course_name, score) VALUES (?, ?, ?, ?, ?)",
+         values,
+         (err, results) => {
+           if (err) {
+             console.log(err);
+             return;
+           }
+         }
+       );
+     });
+     res.send("File uploaded and data inserted into the database");
+   });
+ });
+
+app.post ("/api/convert-excel-to-json", function (req,res){
+
+
+  const filePath = req.body.file;
+
+  const workbook = xlsx.readFile(filePath);
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const data = xlsx.utils.sheet_to_json(sheet);
+
+  res.json(data);
+})
 app.post("/login", function (req, res) {
   let email = req.body.email;
   let password = req.body.password;

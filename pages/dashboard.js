@@ -4,6 +4,25 @@ import Cookies from "universal-cookie";
 import Menubar from "../components/menuBars";
 import ClassTable from "../components/Classtable";
 
+import fs from 'fs';
+import xlsx from 'xlsx';
+
+
+
+
+//convert excel to json mockup 
+// export async function getServerSideProps() {
+//   const filePath = './path/to/excel-file.xlsx';
+//   const buffer = fs.readFileSync(filePath);
+//   const workbook = xlsx.read(buffer, { type: 'buffer' });
+//   const sheetName = workbook.SheetNames[0];
+//   const worksheet = workbook.Sheets[sheetName];
+//   const data = xlsx.utils.sheet_to_json(worksheet);
+//   return { props: { data } };
+// }
+
+
+
 export default function Dashboard() {
   // const [data, setData] = useState([]);
   const [subjectData, setsubjectData] = useState([]);
@@ -17,6 +36,28 @@ export default function Dashboard() {
   // const cookies = new Cookies();
 
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const [json, setJson] = useState(null)
+
+  async function handleExcel(e){
+    e.preventDefault();
+
+    const file = event.target.file.files[0];
+
+    const response = await fetch('http://localhost:8080/api/convert-excel-to-json', {
+      method: 'POST',
+      body: JSON.stringify({ file }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+
+    const data = await response.json();
+    setJson(data);
+
+  }
+
 
   function handleFileUpload(event) {
     setSelectedFile(event.target.files[0]);
@@ -240,6 +281,17 @@ export default function Dashboard() {
             <p className="text-3xl mt-4 font-bold underline text-black">
               จัดการรายววิชา และ แก้ไขเกรด
             </p>
+            <pre>
+              waiting for endpoint
+            </pre>
+    {/*}    <form onSubmit={handleExcel}>
+        <input type="file" name="file" />
+        <button type="submit">Convert to JSON</button>
+      </form>
+
+      {json && (
+        <pre>{JSON.stringify(json, null, 2)}</pre>
+      )}*/}
             {/* make logout button */}
             {/* <button
               className="bg-rose-500 text-white p-2 rounded-lg hover:bg-rose-700"
