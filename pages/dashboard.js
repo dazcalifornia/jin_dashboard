@@ -4,8 +4,8 @@ import Cookies from "universal-cookie";
 import Menubar from "../components/menuBars";
 import ClassTable from "../components/Classtable";
 
-import fs from 'fs';
-import xlsx from 'xlsx';
+// import fs from 'fs';
+// import xlsx from 'xlsx';
 
 
 
