@@ -18,7 +18,8 @@
     "react-dom": "18.2.0",
     "react-table": "^7.8.0",
     "tls": "^0.0.1",
-    "universal-cookie": "^4.0.4"
+    "universal-cookie": "^4.0.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",

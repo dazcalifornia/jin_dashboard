@@ -44,6 +44,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen bg-white">
+      <button onClick={()=>{router.push('/test')}}>TEst</button>
       <div className="fade-in text-center pt-20 relative pb-8 sm:mx-auto sm:px-1 sm:max-w-xl">
         <div className="px-4 pt-4 sm:px-0 ">
           <div className="max-w-sm bg-sky-200 rounded-lg border border-gray-200 shadow-md">
