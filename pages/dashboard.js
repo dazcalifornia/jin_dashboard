@@ -97,24 +97,35 @@ export default function Dashboard() {
       .catch((error) => console.log(error));
   };
 
-  const editSubject = async (event) => {
-    try {
-      const response = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/editsubJect", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      if (data.success) {
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
+
+const editSubject = async (event) => {
+  event.preventDefault();
+  try {
+    const response = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/editsubJect", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data1: formData.data1,
+        data2: formData.data2,
+        data3: formData.data3,
+        origin: formData.origin,
+      }),
+    });
+    const data = await response.json();
+    if (data.message) {
+      alert(data.message);
+    } else {
+      alert("Error updating data");
     }
-  };
+    setEditOpen({ isOpen: false });
+  } catch (error) {
+    console.error(error);
+    alert("Error updating data");
+  }
+};
+
 
   const editGrade = async () => {
     try {
@@ -231,10 +242,10 @@ export default function Dashboard() {
         jsonData.push(fileData);
         if (jsonData.length === files.length) {
           setJson(jsonData);
+          console.log("Json: ", jsonData)
         }
       };
       reader.readAsArrayBuffer(file);
-      console.log("JSON:",JSON.stringify(json))
     });
   };
 
@@ -248,7 +259,7 @@ export default function Dashboard() {
               จัดการรายววิชา และ แก้ไขเกรด
             </p>
             <pre>
-              waiting for endpoint
+              waiting for endpoint & got bugs in edit Subject
             </pre>
     <div className="w-full max-w-md mx-auto">
       <div className="mb-4">
