@@ -1,68 +1,18 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import Cookies from "universal-cookie";
+import * as XLSX from "xlsx";
+
 import Menubar from "../components/menuBars";
 import ClassTable from "../components/Classtable";
 
-// import fs from 'fs';
-// import xlsx from 'xlsx';
-
-
-
-
-//convert excel to json mockup 
-// export async function getServerSideProps() {
-//   const filePath = './path/to/excel-file.xlsx';
-//   const buffer = fs.readFileSync(filePath);
-//   const workbook = xlsx.read(buffer, { type: 'buffer' });
-//   const sheetName = workbook.SheetNames[0];
-//   const worksheet = workbook.Sheets[sheetName];
-//   const data = xlsx.utils.sheet_to_json(worksheet);
-//   return { props: { data } };
-// }
-
-
 
 export default function Dashboard() {
-  // const [data, setData] = useState([]);
   const [subjectData, setsubjectData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [editOpen, setEditOpen] = useState({ isOpen: false, id: "" });
 
-  // const [searchInput, setSearchInput] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
-
-  // const [loading, setLoading] = useState(true);
-  // const cookies = new Cookies();
-
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const [json, setJson] = useState(null)
-
-  async function handleExcel(e){
-    e.preventDefault();
-
-    const file = event.target.file.files[0];
-
-    const response = await fetch('http://localhost:8080/api/convert-excel-to-json', {
-      method: 'POST',
-      body: JSON.stringify({ file }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-
-    const data = await response.json();
-    setJson(data);
-
-  }
-
-
-  function handleFileUpload(event) {
-    setSelectedFile(event.target.files[0]);
-  }
-
 
   const [formData, setFormData] = useState({
     data1: "",
@@ -77,23 +27,6 @@ export default function Dashboard() {
     owner: "",
     subject: "",
   });
-
-  // const searchItems = (searchValue) => {
-  //   setSearchInput(searchValue);
-  //   if (searchInput !== "") {
-  //     const filteredData = data.filter((item) => {
-  //       return Object.values(item)
-  //         .join("")
-  //         .toLowerCase()
-  //         .includes(searchInput.toLowerCase());
-  //     });
-  //     setFilteredResults(filteredData);
-  //     console.log(filteredData);
-  //   } else {
-  //     setFilteredResults(data);
-  //   }
-  // };
-
   const handleChange = (event) => {
     setFormData({
       ...formData,
@@ -109,13 +42,6 @@ export default function Dashboard() {
   };
 
   const router = useRouter();
-
-  // useEffect(()=>{
-  //   fetch('http://https://3a88-45-136-254-11.ap.ngrok.io/course')
-  //   .then(response => response.json())
-  //   .then(data => setData(data))
-  //   .catch(error => console.log(error));
-  // },[])
 
   useEffect(() => {
     const cachedData = cookies.get("data");
@@ -269,8 +195,48 @@ export default function Dashboard() {
       }
     }, []);
 
+    const [files, setFiles] = useState([]);
+  const [json, setJson] = useState(null);
 
+  const handleFileUpload = (event) => {
+    const newFiles = [...files];
+    const fileList = event.target.files;
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      newFiles.push(file);
+    }
+    setFiles(newFiles);
+  };
 
+  const removeFile = (file) => {
+    const newFiles = files.filter((f) => f !== file);
+    setFiles(newFiles);
+  };
+
+    const convertToJSON = () => {
+    const jsonData = [];
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        const fileData = {
+          fileName: file.name,
+          sheetName: sheetName,
+          data: sheetData,
+        };
+        jsonData.push(fileData);
+        if (jsonData.length === files.length) {
+          setJson(jsonData);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+      console.log("JSON:",JSON.stringify(json))
+    });
+  };
 
   return (
     <div>
@@ -284,62 +250,58 @@ export default function Dashboard() {
             <pre>
               waiting for endpoint
             </pre>
-    {/*}    <form onSubmit={handleExcel}>
-        <input type="file" name="file" />
-        <button type="submit">Convert to JSON</button>
-      </form>
+    <div className="w-full max-w-md mx-auto">
+      <div className="mb-4">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="file-upload"
+        >
+          Choose Excel file(s) to upload
+        </label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="file-upload"
+          type="file"
+          accept=".xlsx"
+          multiple
+          onChange={handleFileUpload}
+        />
+      </div>
+
+      {files.length > 0 && (
+        <div>
+          <h3 className="text-lg font-bold mb-2">Uploaded Files:</h3>
+          <ul className="border rounded p-2">
+            {files.map((file, index) => (
+              <li key={index} className="flex justify-between">
+                <span className="text-gray-700">{file.name}</span>{' '}
+                <button
+                  className="text-sm text-red-600 hover:text-red-800"
+                  onClick={() => removeFile(file)}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            onClick={convertToJSON}
+          >
+            Convert to JSON
+          </button>
+        </div>
+      )}
 
       {json && (
-        <pre>{JSON.stringify(json, null, 2)}</pre>
-      )}*/}
-            {/* make logout button */}
-            {/* <button
-              className="bg-rose-500 text-white p-2 rounded-lg hover:bg-rose-700"
-              onClick={handleSignout}
-              type="button"
-            >
-              Logout
-            </button> */}
+        <div className="mt-4">
+          <h3 className="text-lg font-bold mb-2">Converted JSON Data:</h3>
+          <pre className="bg-gray-200 p-2">{JSON.stringify(json, null, 2)}</pre>
+        </div>
+      )}
 
-            {/* addfile */}
-
-            {/* <form>
-              <input type="file" name="file" />
-              <button
-                className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
-                type="button"
-                onClick={()=>{
-                fetch("/upload", {
-                  method: "POST",
-                  body: selectedFile,
-                })
-                  .then((res) => res.text())
-                  .then((data) => console.log(data))
-                  .catch((error) => console.error(error));
-                }}
-              >
-                Upload
-              </button>
-            </form>
-            <button
-              className="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-700"
-              onClick={()=>{
-                fetch("https://3a88-45-136-254-11.ap.ngrok.io/upload", {
-                  method: "POST",
-                  body: selectedFile,
-                })
-                  .then((res) => res.text())
-                  .then((data) => console.log(data))
-                  .catch((error) => console.error(error));
-                
-              }}
-              type="button"
-            >
-              addFile
-            </button>
-            <input type="file" onChange={handleFileUpload} />
-            {selectedFile && <p>File selected: {selectedFile.name}</p>} */}
-            {/* moddal */}
+      {!json && files.length === 0 && <p>No files uploaded.</p>}
+    </div>            {/* moddal */}
             {isOpen && (
               <div className="fixed bottom-0 inset-x-0 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center">
                 <div
