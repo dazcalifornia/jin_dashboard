@@ -18,6 +18,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
+    protected $connection = 'sqlsrv';
+    protected $table = 'Grades';
+    protected $primaryKey = 'GradeID';
+
+    protected $fillable = [
+        'GradeID', 'GradeName', 'GradeDescription', 'GradeStatus'
+    ];
+
+
+
     protected $fillable = [
         'name', 'email',
     ];
