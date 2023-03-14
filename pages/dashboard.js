@@ -50,7 +50,7 @@ export default function Dashboard() {
       setLoading(false);
       // Fetch latest data from server
       const fetchData = async () => {
-        const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
+        const result = await fetch("https://672f-45-136-254-11.ap.ngrok.io/course", {
           headers: {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
@@ -70,7 +70,7 @@ export default function Dashboard() {
       fetchData();
     } else {
       const fetchData = async () => {
-        const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
+        const result = await fetch("https://672f-45-136-254-11.ap.ngrok.io/course", {
           headers: {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
@@ -91,7 +91,7 @@ export default function Dashboard() {
 
   const subjectMenu = (id) => {
     setsubjectData([])
-    fetch(`https://3a88-45-136-254-11.ap.ngrok.io/grades/${id}`)
+    fetch(`https://672f-45-136-254-11.ap.ngrok.io/grades/${id}`)
       .then((response) => response.json())
       .then((subjectData) => setsubjectData(subjectData))
       .catch((error) => console.log(error));
@@ -101,7 +101,7 @@ export default function Dashboard() {
 const editSubject = async (event) => {
   event.preventDefault();
   try {
-    const response = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/editsubJect", {
+    const response = await fetch("https://672f-45-136-254-11.ap.ngrok.io/editsubJect", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -129,7 +129,7 @@ const editSubject = async (event) => {
 
   const editGrade = async () => {
     try {
-      const response = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/editGrade", {
+      const response = await fetch("https://672f-45-136-254-11.ap.ngrok.io/editGrade", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

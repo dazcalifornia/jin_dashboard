@@ -212,7 +212,7 @@ const convertToJSON = () => {
       <h2>Course</h2>
         <div className="flex flex-wrap -m-4">
           {course.map((course) => (
-            <div className="p-4 lg:w-1/3">
+            <div className="p-4 lg:w-1/3" key={course}>
               <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
             <p>{course.course_id}</p>
             <p>{course.course_name}</p>
@@ -228,7 +228,7 @@ const convertToJSON = () => {
       <h2>student</h2>
         <div className="flex flex-wrap -m-4">
           {student.map((student) => (
-            <div className="p-4 lg:w-1/3">
+            <div className="p-4 lg:w-1/3" key={student}>
               <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
             <p>ID: {student.Id}</p>
             <p>Name: {student.name}</p>
@@ -250,7 +250,7 @@ const convertToJSON = () => {
       <h2>student</h2>
         <div className="flex flex-wrap -m-4">
           {grades.map((grade) => (
-            <div className="p-4 lg:w-1/3">
+            <div className="p-4 lg:w-1/3" key={grade}>
               <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
             <p>Course ID: {grade.courseId}</p>
             <p>Coruse Name: {grade.Course_name}</p>
