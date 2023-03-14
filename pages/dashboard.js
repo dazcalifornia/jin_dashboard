@@ -164,48 +164,6 @@ const editSubject = async (event) => {
     }
     
 
-  useEffect(() => {
-      const cachedData = cookies.get("data");
-      if (cachedData) {
-        setData(cachedData);
-        setLoading(false);
-        // Fetch latest data from server
-        const fetchData = async () => {
-          const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
-            headers: {
-              "Cache-Control": "no-cache",
-              Pragma: "no-cache",
-            },
-          });
-          const updatedData = await result.json();
-          // Compare the cached data with the latest data
-          if (JSON.stringify(cachedData) !== JSON.stringify(updatedData)) {
-            // Update the cached data if it's different
-            cookies.set("data", updatedData, {
-              maxAge: 60 * 60 * 24,
-              sameSite: "strict",
-            });
-            setData(updatedData);
-          }
-        };
-        fetchData();
-      } else {
-        const fetchData = async () => {
-          const result = await fetch("https://3a88-45-136-254-11.ap.ngrok.io/course", {
-            headers: {
-              "Cache-Control": "no-cache",
-              Pragma: "no-cache",
-            },
-          });
-          const data = await result.json();
-          setData(data);
-          setLoading(false);
-          cookies.set("data", data, { maxAge: 60 * 60 * 24, sameSite: "strict" });
-        };
-        fetchData();
-      }
-    }, []);
-
     const [files, setFiles] = useState([]);
   const [json, setJson] = useState(null);
 

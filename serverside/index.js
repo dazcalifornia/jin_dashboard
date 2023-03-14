@@ -144,19 +144,7 @@ app.get("/grades/:id", (req, res) => {
   });
 });
 
-app.get("/std", (req, res) => {
-  db.query("SELECT * FROM Students", (err, result) => {
-    if (err) {
-      console.log(err);
-      res.send(400).json({ message: "Bad request" });
-    } else {
-      if (result === "") {
-        res.send({ data: "empty" });
-      }
-      res.send(result);
-    }
-  });
-});
+
 app.get("/user", (req, res) => {
   db.query("SELECT * FROM Users", (err, result) => {
     if (err) {
