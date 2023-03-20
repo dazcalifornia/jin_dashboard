@@ -8,6 +8,10 @@ $router->get('/', function () use ($router) {
     ]);
 });
 
+$router->get('/php', function () use ($router) {
+  return phpinfo();
+});
+
 $router->get('/grades', 'GradesController@index');
 $router->get('/course', 'CourseController@index');
 $router->get('/std', 'StudentController@index');

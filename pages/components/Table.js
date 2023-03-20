@@ -1,28 +1,7 @@
-
 import React from 'react'
 
 const Table = ({ data }) => {
-    const [selectedData, setSelectedData] = useState(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: ''
-  })
 
-  const handleEditClick = (item) => {
-    setSelectedData(item)
-    setFormData({
-      name: item.name,
-      email: item.email
-    })
-    setIsModalOpen(true)
-  }
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    // Do something with the updated form data
-    setIsModalOpen(false)
-  }
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
