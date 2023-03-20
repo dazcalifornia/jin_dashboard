@@ -3,8 +3,6 @@
 @tailwind utilities;
 @tailwind screens;
 
-
-
 html,
 body {
   padding: 0;
@@ -14,8 +12,8 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 html{
-  background-color:#57c5fa;
-  background:linear-gradient(#57c5fa,#0a81fe);
+  /*background-color:#57c5fa;
+  background:linear-gradient(#57c5fa,#0a81fe);*/
 }
 
 a {
