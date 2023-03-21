@@ -80,61 +80,123 @@ function FileUpload() {
     setFiles(newFiles);
   };
 
-    
-const convertToJSON = () => {
-  const jsonData = [];
-  files.forEach((file) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const data = new Uint8Array(event.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+  const handleSubmit = async () => {
+  try {
+    // Convert the files to JSON
+    const jsonData = await convertToJSON();
+    console.log('JSON data:', jsonData);
 
-      // Extract the header row as the key index
-      const headerRow = sheetData[0];
-      // Remove the header row from the data array
-      sheetData.shift();
-
-      // Map each row of data to an object with keys from the header row
-      const rows = sheetData.map((row) => {
-        const rowData = {};
-        headerRow.forEach((key, index) => {
-          rowData[key] = row[index];
-        });
-        return rowData;
-      });
-
-      const fileData = {
-        fileName: file.name,
-        sheetName: sheetName,
-        data: rows,
-      };
-      jsonData.push(fileData);
-      if (jsonData.length === files.length) {
-        setJson(jsonData);
-        console.log("Json: ", jsonData)
-      }
+    // Submit the JSON data to the API
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(jsonData)
     };
-    reader.readAsArrayBuffer(file);
-  });
+    const response = await fetch('http://localhost:8000/grades/upload', requestOptions);
+    const data = await response.json();
+    alert(data.message);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
+const convertToJSON = () => {
+  return new Promise((resolve, reject) => {
+    const jsonData = [];
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-  const submitJSONData = async () => {
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(json)
-  };
+        // Extract the header row as the key index
+        const headerRow = sheetData[0];
+        // Remove the header row from the data array
+        sheetData.shift();
 
-  const response = await fetch('http://localhost:8000/submit', requestOptions);
-  const data = await response.json();
-  console.log(data);
-}
+        // Map each row of data to an object with keys from the header row
+        const rows = sheetData.map((row) => {
+          const rowData = {};
+          headerRow.forEach((key, index) => {
+            rowData[key] = row[index];
+          });
+          return rowData;
+        });
+
+        const fileData = {
+          fileName: file.name,
+          sheetName: sheetName,
+          data: rows,
+        };
+        jsonData.push(fileData);
+        if (jsonData.length === files.length) {
+          resolve(jsonData);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  });
+};
+    
+// const convertToJSON = () => {
+//   const jsonData = [];
+//   files.forEach((file) => {
+//     const reader = new FileReader();
+//     reader.onload = (event) => {
+//       const data = new Uint8Array(event.target.result);
+//       const workbook = XLSX.read(data, { type: 'array' });
+//       const sheetName = workbook.SheetNames[0];
+//       const sheet = workbook.Sheets[sheetName];
+//       const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+//       // Extract the header row as the key index
+//       const headerRow = sheetData[0];
+//       // Remove the header row from the data array
+//       sheetData.shift();
+
+//       // Map each row of data to an object with keys from the header row
+//       const rows = sheetData.map((row) => {
+//         const rowData = {};
+//         headerRow.forEach((key, index) => {
+//           rowData[key] = row[index];
+//         });
+//         return rowData;
+//       });
+
+//       const fileData = {
+//         fileName: file.name,
+//         sheetName: sheetName,
+//         data: rows,
+//       };
+//       jsonData.push(fileData);
+//       if (jsonData.length === files.length) {
+//         setJson(jsonData);
+//         console.log("Json: ", jsonData)
+//       }
+//     };
+//     reader.readAsArrayBuffer(file);
+//   });
+// };
+
+
+// const submitJSONData = async () => {
+//   const requestOptions = {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(json)
+//   };
+
+//   const response = await fetch('http://localhost:8000/submit', requestOptions);
+//   const data = await response.json();
+//   alert(data.message);
+// }
 
 
 
@@ -190,9 +252,9 @@ const convertToJSON = () => {
         </button>
          <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            onClick={submitJSONData}
+            onClick={handleSubmit}
           >
-        Send It to BE 
+        Submit 
         </button>
 
         </div>
@@ -247,7 +309,7 @@ const convertToJSON = () => {
     </section>
     <section className="text-gray-600 body-font">
     <div className="container px-5 py-24 mx-auto">
-      <h2>student</h2>
+      <h2>student_grade</h2>
         <div className="flex flex-wrap -m-4">
           {grades.map((grade) => (
             <div className="p-4 lg:w-1/3" key={grade}>

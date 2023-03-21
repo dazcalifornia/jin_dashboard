@@ -20,6 +20,7 @@ $router->post('/login', 'UserController@login');
 
 $router->put('/editSubject', 'SubjectController@edit');
 $router->put('/editGrade', 'GradesController@edit');
+$router->post('/grades/upload', 'GradesController@upload');
 
 
 $router->get('/api', function () {

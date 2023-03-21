@@ -4,6 +4,8 @@ use App\Models\Grade;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class GradesController extends Controller
 {
@@ -36,6 +38,25 @@ class GradesController extends Controller
                 'error' => 'Data update failed'
             ]);
         }
-    }
-}
+  }
+   public function upload(Request $request)
+    {
+        $data = $request->json()->all();
+        if (empty($data)) {
+            return response()->json(['message' => 'No data provided']);
+        }
+        foreach ($data as $item) {
+            foreach ($item['data'] as $row) {
+                DB::table('Grades')->insert([
+                    'studentId' => $row['StudentId'],
+                    'Std_name' => $row['Name'],
+                    'Course_name' => $row['courseName'],
+                    'score' => $row['Score'],
+                    'courseId' => $row['courseID'],
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+        }
+        return response()->json(['message' => 'Data uploaded successfully']);
+    }}
 

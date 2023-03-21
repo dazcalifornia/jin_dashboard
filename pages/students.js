@@ -5,7 +5,7 @@ export default function Students(){
     const [data,setData] = useState([])
 
       useEffect(() => {
-        fetch("https://672f-45-136-254-11.ap.ngrok.io/std")
+        fetch("http://localhost:8000/std")
           .then((response) => response.json())
           .then((data) => setData(data))
           .catch((error) => console.log(error));
