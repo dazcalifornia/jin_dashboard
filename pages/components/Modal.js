@@ -1,35 +1,49 @@
-import React, { useState } from 'react'
+import React from "react";
 
-const Modal = ({ isOpen, onClose, children }) => {
-  const [isModalOpen, setIsModalOpen] = useState(isOpen)
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    onClose()
-  }
+function Modal({ open, onClose, children }) {
+  if (!open) return null;
 
   return (
     <>
-      {isModalOpen && (
-        <>
-          <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-lg w-full max-w-md p-6 z-50">
-              <div className="flex justify-end">
-                <button onClick={handleCloseModal}>
-                  <svg className="h-6 w-6 text-gray-700 hover:text-gray-900 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              {children}
-            </div>
+      <div
+        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        onClick={onClose}
+      ></div>
+      <div
+        className="fixed z-10 inset-0 overflow-y-auto"
+        aria-labelledby="modal-title"
+        aria-modal="true"
+      >
+        <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+          <div
+            className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={onClose}
+              className="absolute top-0 right-0 p-2 m-2 text-gray-500 hover:text-gray-800 focus:outline-none focus:text-gray-800"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            {children}
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </>
-  )
+  );
 }
 
-export default Modal
-
+export default Modal;

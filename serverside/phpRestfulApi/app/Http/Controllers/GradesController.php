@@ -19,6 +19,16 @@ class GradesController extends Controller
             return response()->json($results);
         }
   }
+  public function show($id)
+    {
+        $grades = Grade::where('courseId', $id)->get();
+
+        if ($grades->isEmpty()) {
+            return response()->json(['data' => 'empty']);
+        } else {
+            return response()->json($grades);
+        }
+    }
    public function edit(Request $request)
     {
         $grade = $request->input('grade');
