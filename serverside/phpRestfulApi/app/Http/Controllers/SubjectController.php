@@ -7,10 +7,10 @@ class SubjectController extends Controller
 {
     public function edit(Request $request)
     {
-        $courseId = $request->input('data1');
-        $courseName = $request->input('data2');
-        $credit = $request->input('data3');
-        $origin = $request->input('origin');
+        $courseId = $request->input('course_id');
+        $courseName = $request->input('course_name');
+        $credit = $request->input('credit');
+        $origin = $request->input('updated_at');
 
         $course = Course::where('course_id', $origin)->first();
         if (!$course) {

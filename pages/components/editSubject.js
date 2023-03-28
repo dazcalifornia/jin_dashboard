@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Modal from "./Modal";
+import Toast from "./Toast";
 
-function EditCourseModal({ course, onEdit, onClose }) {
+function EditCourseModal({ course, onEdit, onClose, handleEditCourseSuccess }) {
   const [newCourse, setNewCourse] = useState(course);
 
   const handleInputChange = (event) => {
@@ -9,17 +10,31 @@ function EditCourseModal({ course, onEdit, onClose }) {
     setNewCourse({ ...newCourse, [name]: value });
   };
 
-  const handleUpdate = () => {
-    fetch(`http://localhost:8000/editSubject/${course.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newCourse),
-    })
 
-    onClose();
+const handleUpdate = () => {
+  // Set the updated_at field to the current date and time
+  const newCourseWithDate = {
+    ...newCourse,
+    updated_at: newCourse.course_id,
   };
+
+  fetch(`http://localhost:8000/editSubject`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newCourseWithDate),
+  }).then((response) => {
+    if (response.ok) {
+      console.log("Course updated successfully");
+      onClose();
+       handleEditCourseSuccess();
+    } else {
+      console.error("Failed to update course");
+    }
+  });
+};
+
 
   return (
     <Modal open={true} onClose={onClose}>

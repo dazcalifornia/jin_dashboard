@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import EditCourseModal from './editSubject';
 
-const Table = ({ data }) => {
+const Table = ({ data , handleEditCourseSuccess}) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
-
+  const [searchQuery, setSearchQuery] = useState('');
   const handleEditClick = (course) => {
     // Set the selected course and open the modal
     setSelectedCourse(course);
@@ -13,9 +13,32 @@ const Table = ({ data }) => {
     // Implement info logic here
     console.log(`Info button clicked for course id: ${courseId}`);
   };
+ 
+  const filterData = (data, query) => {
+  return data.filter((item) => {
+    const { course_id, course_name, credit } = item;
+    const lowerCaseQuery = query.toLowerCase();
+    return (
+      course_id.toLowerCase().includes(lowerCaseQuery) ||
+      course_name.toLowerCase().includes(lowerCaseQuery) ||
+      credit.toString().includes(lowerCaseQuery)
+    );
+  });
+}
+const filteredData = filterData(data, searchQuery);
 
   return (
     <div className="flex flex-col mt-10">
+    <div className="mb-4 flex items-center">
+        <label htmlFor="search" className="mr-2 font-bold text-gray-600">Search:</label>
+        <input
+          id="search"
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border border-gray-300 p-1 rounded-md"
+        />
+      </div>
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
           <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -36,8 +59,10 @@ const Table = ({ data }) => {
                   </th>
                 </tr>
               </thead>
+              
+            
               <tbody className="bg-white divide-y divide-gray-200">
-                {data.map((item) => (
+                {filteredData.map((item) => (
                   <tr key={item.course_id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {item.course_id}
@@ -70,7 +95,7 @@ const Table = ({ data }) => {
         </div>
       </div>
       {selectedCourse && (
-        <EditCourseModal course={selectedCourse} onClose={() => setSelectedCourse(null)} />
+        <EditCourseModal course={selectedCourse} handleEditCourseSuccess={handleEditCourseSuccess} onClose={() => setSelectedCourse(null)} />
       )}
     </div>
   );
