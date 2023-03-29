@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import EditCourseModal from './editSubject';
+import CourseInfo from './CourseInfo';
 
 const Table = ({ data , handleEditCourseSuccess}) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
+
   const handleEditClick = (course) => {
     // Set the selected course and open the modal
     setSelectedCourse(course);
@@ -11,22 +17,63 @@ const Table = ({ data , handleEditCourseSuccess}) => {
 
   const handleInfoClick = (courseId) => {
     // Implement info logic here
+    setSelectedCourseId(courseId);
     console.log(`Info button clicked for course id: ${courseId}`);
   };
- 
-  const filterData = (data, query) => {
-  return data.filter((item) => {
-    const { course_id, course_name, credit } = item;
-    const lowerCaseQuery = query.toLowerCase();
-    return (
-      course_id.toLowerCase().includes(lowerCaseQuery) ||
-      course_name.toLowerCase().includes(lowerCaseQuery) ||
-      credit.toString().includes(lowerCaseQuery)
-    );
-  });
-}
-const filteredData = filterData(data, searchQuery);
 
+  const handleSortClick = (column) => {
+    // Toggle the sort order if the same column is clicked twice
+    if (sortColumn === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortOrder('asc');
+    }
+  }
+ 
+const filterData = (data, query, column, order) => {
+  return data
+    .filter((item) => {
+      const { course_id, course_name, credit } = item;
+      const lowerCaseQuery = query.toLowerCase();
+      return (
+        course_id.toLowerCase().includes(lowerCaseQuery) ||
+        course_name.toLowerCase().includes(lowerCaseQuery) ||
+        credit.toString().includes(lowerCaseQuery)
+      );
+    })
+    .sort((a, b) => {
+      if (!column) {
+        // No sort column selected, return unsorted
+        return 0;
+      }
+      const valueA = a[column];
+      const valueB = b[column];
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        return valueA.localeCompare(valueB, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        });
+      } else {
+        return valueA - valueB;
+      }
+    })
+    .map((item) => item)
+    .sort((a, b) => {
+      const valueA = a[column];
+      const valueB = b[column];
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        return valueA.localeCompare(valueB, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        });
+      } else {
+        return valueA - valueB;
+      }
+    })
+    .sort((a, b) => (order === 'asc' ? 1 : -1));
+};
+const filteredData = filterData(data, searchQuery, sortColumn, sortOrder);
   return (
     <div className="flex flex-col mt-10">
     <div className="mb-4 flex items-center">
@@ -38,6 +85,25 @@ const filteredData = filterData(data, searchQuery);
           onChange={(e) => setSearchQuery(e.target.value)}
           className="border border-gray-300 p-1 rounded-md"
         />
+    <label htmlFor="sort" className="mr-2 font-bold text-gray-600">Sort by:</label>
+      <select
+        id="sort"
+        value={sortColumn}
+        onChange={(e) => setSortColumn(e.target.value)}
+        className="border border-gray-300 p-1 rounded-md"
+      >
+        <option value="">None</option>
+        <option value="course_id">Course ID</option>
+        <option value="course_name">Course Name</option>
+        <option value="credit">Credit</option>
+      </select>
+
+<button
+  className="ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+  onClick={() => handleSortClick(document.getElementById("sort").value)}
+>
+  {sortOrder === 'asc' ? '▲' : '▼'}
+</button>
       </div>
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -94,6 +160,9 @@ const filteredData = filterData(data, searchQuery);
           </div>
         </div>
       </div>
+      {selectedCourseId && (
+        <CourseInfo courseId={selectedCourseId}  handleEditCourseSuccess={handleEditCourseSuccess} onClose={()=> setSelectedCourseId(null)}/>
+      )}
       {selectedCourse && (
         <EditCourseModal course={selectedCourse} handleEditCourseSuccess={handleEditCourseSuccess} onClose={() => setSelectedCourse(null)} />
       )}
