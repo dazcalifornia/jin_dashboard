@@ -14,7 +14,7 @@ function Modal({ open, onClose, children }) {
         aria-labelledby="modal-title"
         aria-modal="true"
       >
-        <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+        <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0 w-full ">
           <div
             className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full"
             onClick={(e) => e.stopPropagation()}

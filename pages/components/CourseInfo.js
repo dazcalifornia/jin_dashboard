@@ -1,56 +1,64 @@
-import {useState, useEffect} from 'react'
-import Modal from './Modal'
+import { useState, useEffect } from 'react';
+import Modal from './Modal';
 
-const CourseInfo = ({courseId, onEdit, onClose, handleEditCourseSuccess}) => {
-  const [newCourseId, setNewCourseId] = useState(courseId);
-  const [course, setCourse] = useState(null);
-  const [editingScoreId, setEditingScoreId] = useState(null);
-  const [newScore, setNewScore] = useState('');
-  
+const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
+  const [course, setCourse] = useState([]);
+  const [passingData, setPassingData] = useState({ grade: '', owner: '', subject: '' });
+  const [isEditingGrade, setIsEditingGrade] = useState(false);
+
   useEffect(() => {
     async function fetchCourse() {
-      const res = await fetch(`http://localhost:8000/grades/${courseId}`);
-      const data = await res.json();
-      setCourse(data);
+      try {
+        const response = await fetch(`http://localhost:8000/grades/${courseId}`);
+        const data = await response.json();
+        console.log("DATA:",data);
+        setCourse(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchCourse();
   }, [courseId]);
-  
-  const [isEditing, setIsEditing] = useState(false);
 
-  function handleEdit() {
-    // Code to handle editing the course
-    setIsEditing(true);
-  }
-  
-  if (!course) {
-    return <div>Loading...</div>
-  }
+  useEffect(() => {
+  setPassingData(prevPassingData => ({
+    ...prevPassingData,
+    owner: course.length ? course[0].studentId : '',
+    subject: course.length ? course[0].courseId : ''
+  }));
+}, [course]);
 
-  const handleScoreClick = (scoreId) => {
-    setEditingScoreId(scoreId);
+  const handleGradeChange = (e) => {
+    setPassingData({
+      ...passingData,
+      grade: e.target.value
+    });
+  };
+  const debug = () => {
+    console.log(passingData);
   };
 
-  const handleSaveClick = async (scoreId, newScore) => {
+  const handleEditGradeClick = () => {
+    setIsEditingGrade(true);
+  };
+
+  const handleSaveGradeClick = async () => {
+    console.log('Saving grade', passingData);
     try {
-      const response = await fetch(`http://localhost:8000/grades/upload`, {
+      const response = await fetch(`http://localhost:8000/editGrade`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          grade: newScore,
-          owner: course.studentId,
-          subject: course.courseId,
-        }),
+        body: JSON.stringify(passingData),
       });
 
       if (response.ok) {
         // If the update was successful, remove the score ID from the state
-        setEditingScoreId(null);
+        setIsEditingGrade(false);
         handleEditCourseSuccess();
       } else {
-        console.error('Failed to update score');
+        console.error('Failed to update grade');
       }
     } catch (err) {
       console.error(err);
@@ -63,62 +71,73 @@ const CourseInfo = ({courseId, onEdit, onClose, handleEditCourseSuccess}) => {
       ...newCourseId,
       updated_at: newCourseId.course_id,
     };
-  };
-  
-  return (
+  };  return (
     <Modal open={true} onClose={onClose}>
+      <button onClick={debug}>Debug</button>
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div className="sm:flex sm:items-start">
-          
-          <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <h3
-              className="text-lg leading-6 font-medium text-gray-900"
-              id="modal-title"
-            >
-              Edit Course
-            </h3>
-            <div className="mt-2">
-              {/*code here*/}
-             <div className="score-list">
-      {course.map((score) => (
-        <div key={score.studentId} className="score-list-item">
-          <div className="score-list-item-header" onClick={() => handleScoreClick(score.studentId)}>
-            <div>{score.Std_name}</div>
-            <div>{score.score}</div>
-          </div>
-          {editingScoreId === score.studentId && (
-            <div className="score-list-item-edit">
-              <input type="text" defaultValue={score.score} onChange={(e) => setNewScore(e.target.value)} />
-              <button onClick={() => handleSaveClick(score.studentId, newScore)}>Save</button>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-            </div>
-          </div>
-        </div>
-      <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-        <button
-          type="button"
-          className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-          onClick={handleUpdate}
-        >
-          Update Course 
-        </button>
-        <button
-          type="button"
-          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-          onClick={onClose}
-        >
-          Cancel
-        </button>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">Edit Course</h3>
       </div>
-    </div>
-
       
-    </Modal>
-  )
-}
-export default CourseInfo
+      <table className="border-collapse table-auto w-full text-sm">
+        <thead>
+          <tr>
+            <th className="px-4 py-2">
+              Name
+            </th>
+            <th className="px-4 py-2">
+              subjectname
+            </th>
+            <th className="px-4 py-2">
+              Grade
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {course.map((item) => (
+            <tr key={item.studentId} className="divide-y">
 
+              <td className="px-4 py-2">
+                {item.Std_name}
+              </td>
+              <td className="px-4 py-2">
+  {item.Course_name}
+</td>
+<td className="px-4 py-2">
+  {isEditingGrade ? (
+    <div className="flex justify-center items-center">
+      <input
+        className="border rounded px-2 py-1 w-20 mr-2"
+        type="text"
+        
+        value={passingData.grade}
+        onChange={handleGradeChange}
+      />
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleSaveGradeClick}
+      >
+        Save
+      </button>
+    </div>
+  ) : (
+    <div className="flex justify-between">
+      <span>{item.score}</span>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleEditGradeClick}
+      >
+        Edit
+      </button>
+    </div>
+  )}
+</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+     
+</Modal>
+);
+};
+
+export default CourseInfo;
