@@ -46,7 +46,7 @@ const handleUpdate = () => {
               className="text-lg leading-6 font-medium text-gray-900"
               id="modal-title"
             >
-              Edit Course
+              แก้ไขรายวิชา
             </h3>
             <div className="mt-2">
               <div>
@@ -54,8 +54,8 @@ const handleUpdate = () => {
                   htmlFor="course_id"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Course ID
-                </label>
+                  รหัสวิชา
+              </label>
                 <input
                   type="text"
                   name="course_id"
@@ -70,7 +70,7 @@ const handleUpdate = () => {
                   htmlFor="course_name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Course Name
+                  ชื่อวิชา
                 </label>
                 <input
                   type="text"
@@ -86,7 +86,24 @@ const handleUpdate = () => {
                   htmlFor="credit"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Credit
+                  หมู่เรียน
+                </label>
+                <input
+                  type="text"
+                  name="section"
+                  id="section"
+                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  value={newCourse.section || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="mt-4">
+                <label
+                  htmlFor="credit"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  หน่วยกิต
                 </label>
                 <input
                   type="text"
@@ -106,14 +123,14 @@ const handleUpdate = () => {
           className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
           onClick={handleUpdate}
         >
-          Update Course 
+          ยืนยันการแก้ไข 
         </button>
         <button
           type="button"
-          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          className="mt-3 w-full inline-flex justify-center rounded-md border border-rose-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-rose-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
           onClick={onClose}
         >
-          Cancel
+          ยกเลิก
         </button>
       </div>
     </div>

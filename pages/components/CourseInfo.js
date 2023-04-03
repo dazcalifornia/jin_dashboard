@@ -38,9 +38,13 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
     console.log(passingData);
   };
 
-  const handleEditGradeClick = () => {
-    setIsEditingGrade(true);
-  };
+  
+
+const handleEditGradeClick = (studentId) => {
+  console.log('clicked student ID:', studentId);
+  setIsEditingGrade(studentId);
+  console.log('isEditingGrade:', isEditingGrade);
+};
 
   const handleSaveGradeClick = async () => {
     console.log('Saving grade', passingData);
@@ -73,7 +77,6 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
     };
   };  return (
     <Modal open={true} onClose={onClose}>
-      <button onClick={debug}>Debug</button>
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900">Edit Course</h3>
       </div>
@@ -103,7 +106,7 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
   {item.Course_name}
 </td>
 <td className="px-4 py-2">
-  {isEditingGrade ? (
+  {isEditingGrade === item.studentId ?(
     <div className="flex justify-center items-center">
       <input
         className="border rounded px-2 py-1 w-20 mr-2"
@@ -124,7 +127,7 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
       <span>{item.score}</span>
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleEditGradeClick}
+        onClick={() => handleEditGradeClick(item.studentId)}
       >
         Edit
       </button>

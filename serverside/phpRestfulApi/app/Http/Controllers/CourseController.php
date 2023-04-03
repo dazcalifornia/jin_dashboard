@@ -22,6 +22,25 @@ class CourseController extends Controller
                 ->header('Access-Control-Allow-Methods', 'GET')
                 ->header('Access-Control-Allow-Headers', 'Content-Type');
         }
-    }
+  }
+  public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'course_id' => 'required|unique:course',
+        'course_name' => 'required',
+        'section' => 'required',
+        'credit' => 'required|numeric'
+    ]);
+
+    $course = Course::create($validatedData);
+
+    return response()->json([
+        'message' => 'Course created successfully',
+        'data' => $course
+    ])->header('Access-Control-Allow-Origin', '*')
+    ->header('Access-Control-Allow-Methods', 'POST')
+    ->header('Access-Control-Allow-Headers', 'Content-Type');
+}
+
 }
 

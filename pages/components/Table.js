@@ -118,6 +118,9 @@ const filteredData = filterData(data, searchQuery, sortColumn, sortOrder);
                     ชื่อวิชา
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    หมู่เรียน
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     หน่วยกิต
                   </th>
                   <th scope="col" className="relative px-6 py-3">
@@ -135,6 +138,9 @@ const filteredData = filterData(data, searchQuery, sortColumn, sortOrder);
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.course_name}
+                    </td>
+                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {item.section}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.credit}

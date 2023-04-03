@@ -11,6 +11,7 @@ class SubjectController extends Controller
         $courseName = $request->input('course_name');
         $credit = $request->input('credit');
         $origin = $request->input('updated_at');
+        $section = $request->input('section');
 
         $course = Course::where('course_id', $origin)->first();
         if (!$course) {
@@ -21,6 +22,7 @@ class SubjectController extends Controller
 
         $course->course_id = $courseId;
         $course->course_name = $courseName;
+        $course->section = $section;
         $course->credit = $credit;
         $course->save();
 
