@@ -18,7 +18,9 @@ $router->get('/std', 'StudentController@index');
 $router->get('/user', 'UserController@index');
 $router->post('/login', 'UserController@login');
 
-$router->post('/storecourse', 'CourseController@store');
+
+$router->post('/createCourse', 'CourseController@create');
+
 $router->put('/editSubject', 'SubjectController@edit');
 $router->put('/editGrade', 'GradesController@edit');
 $router->post('/grades/upload', 'GradesController@upload');

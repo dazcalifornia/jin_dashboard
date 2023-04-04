@@ -96,7 +96,7 @@ const handleEditGradeClick = (studentId) => {
           </tr>
         </thead>
         <tbody>
-          {course.map((item) => (
+          {Array.isArray(course) && course.map((item) =>(
             <tr key={item.studentId} className="divide-y">
 
               <td className="px-4 py-2">
@@ -120,6 +120,12 @@ const handleEditGradeClick = (studentId) => {
         onClick={handleSaveGradeClick}
       >
         Save
+      </button>
+      <button
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => setIsEditingGrade(false)}
+      >
+        Cancel
       </button>
     </div>
   ) : (

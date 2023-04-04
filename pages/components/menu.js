@@ -22,6 +22,12 @@ const Menu = () => {
                     Students
                   </p>
                 </Link>
+                <Link href="/upload">
+                  <p className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                    upload
+                  </p>
+                </Link>
+
               </div>
             </div>
           </div>

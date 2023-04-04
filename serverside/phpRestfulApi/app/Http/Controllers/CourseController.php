@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
+use App\Models\Course;
+
 
 class CourseController extends Controller
 {
@@ -23,24 +27,27 @@ class CourseController extends Controller
                 ->header('Access-Control-Allow-Headers', 'Content-Type');
         }
   }
-  public function store(Request $request)
+
+public function create(Request $request)
 {
-    $validatedData = $request->validate([
-        'course_id' => 'required|unique:course',
-        'course_name' => 'required',
-        'section' => 'required',
-        'credit' => 'required|numeric'
-    ]);
+        $this->validate($request, [
+            'course_id' => 'required|numeric',
+            'course_name' => 'required|string',
+            'section' => 'required|string',
+            'credit' => 'required|numeric',
+        ]);
 
-    $course = Course::create($validatedData);
+        DB::table('course')->insert([
+            'course_id' => $request->input('course_id'),
+            'course_name' => $request->input('course_name'),
+            'section' => $request->input('section'),
+            'credit' => $request->input('credit'),
+        ]);
 
-    return response()->json([
-        'message' => 'Course created successfully',
-        'data' => $course
-    ])->header('Access-Control-Allow-Origin', '*')
-    ->header('Access-Control-Allow-Methods', 'POST')
-    ->header('Access-Control-Allow-Headers', 'Content-Type');
-}
-
+        return response()->json(['message' => 'Course added successfully'])
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Methods', 'POST')
+            ->header('Access-Control-Allow-Headers', 'Content-Type');
+    }
 }
 

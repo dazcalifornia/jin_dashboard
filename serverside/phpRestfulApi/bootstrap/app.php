@@ -96,7 +96,9 @@ $app->middleware([
 |
 */
 
-$app->register(Illuminate\Validation\ValidationServiceProvider::class);
+
+$app->register(\Illuminate\Validation\ValidationServiceProvider::class);
+
 $app->register(Illuminate\Database\DatabaseServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
