@@ -24,7 +24,7 @@ $router->post('/createCourse', 'CourseController@create');
 $router->put('/editSubject', 'SubjectController@edit');
 $router->put('/editGrade', 'GradesController@edit');
 $router->post('/grades/upload', 'GradesController@upload');
-$router->get('/grades/{id}', 'GradesController@show');
+$router->get('/grades/{id}/{section}', 'GradesController@show');
 
 $router->get('/api', function () {
     try {

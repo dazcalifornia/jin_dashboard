@@ -33,14 +33,12 @@ public function create(Request $request)
         $this->validate($request, [
             'course_id' => 'required|numeric',
             'course_name' => 'required|string',
-            'section' => 'required|string',
             'credit' => 'required|numeric',
         ]);
 
         DB::table('course')->insert([
             'course_id' => $request->input('course_id'),
             'course_name' => $request->input('course_name'),
-            'section' => $request->input('section'),
             'credit' => $request->input('credit'),
         ]);
 

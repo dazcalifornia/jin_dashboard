@@ -19,9 +19,9 @@ class GradesController extends Controller
             return response()->json($results);
         }
   }
-  public function show($id)
+  public function show($id,$section)
     {
-        $grades = Grade::where('courseId', $id)->get();
+        $grades = Grade::where('courseId', $id)->where('Section',$section)->get();
 
         if ($grades->isEmpty()) {
             return response()->json(['data' => 'empty']);
@@ -63,6 +63,7 @@ class GradesController extends Controller
                     'Course_name' => $row['courseName'],
                     'score' => $row['Score'],
                     'courseId' => $row['courseID'],
+                    'Section' => $row['Section'],
                     'updated_at' => Carbon::now(),
                 ]);
             }
