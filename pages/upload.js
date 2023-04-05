@@ -1,6 +1,8 @@
 import React,{
   useState,
 } from 'react';
+import * as XLSX from "xlsx";
+
 import Menu from './components/Menu';
 
 const uploadPage = () => {
@@ -12,6 +14,9 @@ const uploadPage = () => {
     section: '',
     credit: ''
   });
+  const [files, setFiles] = useState([]);
+  const [json, setJson] = useState(null);
+  const [DataJson, setDataJson] = useState(null);
 
   const handleChange = (event) => {
     setFormData({
@@ -37,9 +42,7 @@ const uploadPage = () => {
 
 
   //upload
-  const [files, setFiles] = useState([]);
-  const [json, setJson] = useState(null);
-  const [DataJson, setDataJson] = useState(null);
+  
 
   const handleFileUpload = (event) => {
     const newFiles = [...files];

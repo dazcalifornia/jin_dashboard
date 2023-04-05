@@ -13,7 +13,8 @@ class SubjectController extends Controller
         $origin = $request->input('updated_at');
         $section = $request->input('section');
 
-        $course = Course::where('course_id', $origin)->first();
+        
+        $course = Course::where('course_id', $origin)->where('section', $section)->first();
         if (!$course) {
             return response()->json([
                 'error' => 'Data update failed: Course not found'
