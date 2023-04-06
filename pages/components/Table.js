@@ -139,8 +139,14 @@ const filteredData = filterData(data, searchQuery, sortColumn, sortOrder);
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.course_name}
                     </td>
-                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.section}
+                    
+
+                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500" >
+                    {item.sections.map((section) => (
+                      <p key={section}>
+                      {section.Section}
+                      </p>
+                    ))}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.credit}

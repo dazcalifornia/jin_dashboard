@@ -3,21 +3,25 @@ import Modal from './Modal';
 
 const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
   const [course, setCourse] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [selectedSec, setSelectedSec] = useState(null);
   const [passingData, setPassingData] = useState({ grade: '', owner: '', subject: '' });
   const [isEditingGrade, setIsEditingGrade] = useState(false);
 
   useEffect(() => {
-    async function fetchCourse() {
+    async function fetchSection() {
       try {
         const response = await fetch(`http://localhost:8000/grades/${courseId}`);
         const data = await response.json();
-        console.log("DATA:",data);
-        setCourse(data);
+        console.log("Section Fetched:",data);
+        setSections(data);
       } catch (error) {
         console.error(error);
       }
     }
-    fetchCourse();
+    
+
+    fetchSection();
   }, [courseId]);
 
   useEffect(() => {
@@ -27,6 +31,17 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
     subject: course.length ? course[0].courseId : ''
   }));
 }, [course]);
+
+  async function fetchCourse() {
+      try {
+        const res = await fetch(`http://localhost:8000/grades/${courseId}/${selectedSec}`);
+        const data = await res.json();
+        console.log("Grade fetched:",data);
+        setCourse(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
   const handleGradeChange = (e) => {
     setPassingData({
@@ -75,12 +90,35 @@ const handleEditGradeClick = (studentId) => {
       ...newCourseId,
       updated_at: newCourseId.course_id,
     };
-  };  return (
+  };  
+return (
     <Modal open={true} onClose={onClose}>
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900">Edit Course</h3>
       </div>
-      
+      <ul className="divide-y divide-gray-200">
+        {sections.map((section) => (
+          <li key={section.section_id}>
+            <button
+              type="button"
+              className="block hover:bg-gray-50"
+              onClick={() => {
+                setSelectedSec(section.Section);
+                console.info("you clicked section:",section.Section);
+                fetchCourse();
+              }}
+            >
+              <div className="px-4 py-4 sm:px-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-indigo-600 truncate">
+                    {section.Section}
+                  </p>
+                </div>
+              </div>
+            </button>
+          </li>
+        ))}
+      </ul>
       <table className="border-collapse table-auto w-full text-sm">
         <thead>
           <tr>

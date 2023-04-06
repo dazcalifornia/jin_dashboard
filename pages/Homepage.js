@@ -12,10 +12,30 @@ const Homepage = () => {
   
   const getCourses = async () => {
   const response = await fetch('http://localhost:8000/course');
-  const data = await response.json().then((data) => {
-    setCourses(data);
-      console.log(data);
-    });
+  const data = await response.json();
+
+  // loop through each course and call getSections for each course_id
+  for (const course of data) {
+    const sectionsResponse = await fetch(`http://localhost:8000/grades/${course.course_id}`);
+    const sections = await sectionsResponse.json();
+    course.sections = sections;
+  }
+  setCourses(data);
+    console.log(data);
+};
+
+ //getSection function and add data to Courses array
+  const getSections = async (id) => {
+    console.log("id",id);
+    const response = await fetch(`http://localhost:8000/grades/${id}`);
+    const data = await response.json().then((data) => {
+      setCourses(Courses.map((course) => {
+        course.sections = data.filter((section) => section.course_id === course.id);
+        return course;
+      }));
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   useEffect(() => {
