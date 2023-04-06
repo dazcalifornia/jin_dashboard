@@ -22,9 +22,11 @@ $router->post('/login', 'UserController@login');
 $router->post('/createCourse', 'CourseController@create');
 
 $router->put('/editSubject', 'SubjectController@edit');
+
 $router->put('/editGrade', 'GradesController@edit');
 $router->post('/grades/upload', 'GradesController@upload');
 $router->get('/grades/{id}/{section}', 'GradesController@show');
+$router->get('/grades/{courseId}', 'GradesController@findSectionByCourseId');
 
 $router->get('/api', function () {
     try {
