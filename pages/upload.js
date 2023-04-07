@@ -122,8 +122,17 @@ const convertToJSON = () => {
   });
 };
 
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const droppedFiles = Array.from(event.dataTransfer.files);
+    setFiles((existingFiles) => [...existingFiles, ...droppedFiles]);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+
+    
       <h1 className="text-3xl font-bold mb-4">Create Course</h1>
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -131,6 +140,65 @@ const convertToJSON = () => {
       >
         Create
       </button>
+    <div
+      className="w-full max-w-md mx-auto p-4 border border-gray-300 rounded-md"
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={handleDrop}
+    >
+      <label className="text-gray-700 font-bold mb-2" htmlFor="file-upload">
+        Choose Excel file(s) to upload
+      </label>
+      <input
+        className="hidden"
+        id="file-upload"
+        type="file"
+        accept=".xlsx"
+        multiple
+        onChange={handleFileUpload}
+      />
+      <div
+        className="p-4 border border-dashed border-gray-400 rounded-md text-gray-400 text-center"
+      >
+        <p>Drag and drop Excel files here</p>
+        <p>or</p>
+        <label
+          className="cursor-pointer underline"
+          htmlFor="file-upload"
+        >
+          click to select files
+        </label>
+      </div>
+      {files.length > 0 && (
+        <div>
+          <h3 className="text-lg font-bold mb-2">Uploaded Files:</h3>
+          <ul className="border rounded p-2">
+            {files.map((file, index) => (
+              <li key={index} className="flex justify-between">
+                <span className="text-gray-700">{file.name}</span>{" "}
+                <button
+                  className="text-sm text-red-600 hover:text-red-800"
+                  onClick={() => removeFile(file)}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            onClick={convertToJSON}
+          >
+            Convert to JSON
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </div>
 
       <div className="w-full max-w-md mx-auto">
         <div className="mb-4">
