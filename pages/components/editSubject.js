@@ -15,7 +15,7 @@ const handleUpdate = () => {
   // Set the updated_at field to the current date and time
   const newCourseWithDate = {
     ...newCourse,
-    updated_at: newCourse.course_id,
+    origin: newCourse.course_id,
   };
 
   fetch(`http://localhost:8000/editSubject`, {
