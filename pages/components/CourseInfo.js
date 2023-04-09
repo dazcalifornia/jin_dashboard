@@ -32,9 +32,9 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
   }));
 }, [course]);
 
-  async function fetchCourse() {
+  async function fetchCourse(sectionId) {
       try {
-        const res = await fetch(`http://localhost:8000/grades/${courseId}/${selectedSec}`);
+        const res = await fetch(`http://localhost:8000/grades/${courseId}/${sectionId}`);
         const data = await res.json();
         console.log("Grade fetched:",data);
         setCourse(data);
@@ -96,29 +96,27 @@ return (
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <h3 className="text-lg leading-6 font-medium text-gray-900">Edit Course</h3>
       </div>
-      <ul className="divide-y divide-gray-200">
-        {sections.map((section) => (
-          <li key={section.section_id}>
-            <button
-              type="button"
-              className="block hover:bg-gray-50"
-              onClick={() => {
-                setSelectedSec(section.Section);
-                console.info("you clicked section:",section.Section);
-                fetchCourse();
-              }}
-            >
-              <div className="px-4 py-4 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-indigo-600 truncate">
-                    {section.Section}
-                  </p>
-                </div>
-              </div>
-            </button>
-          </li>
-        ))}
-      </ul>
+
+
+<select
+  className="block w-full p-2 border border-gray-300 rounded-md"
+  value={selectedSec}
+  onChange={(e) => {
+    setSelectedSec(e.target.value);
+    if (e.target.value !== '') {
+      fetchCourse(e.target.value);
+    }
+  }}
+>
+  <option value="">Select a section</option>
+  {sections.map((section) => (
+    <option key={section.section_id} value={section.Section}>
+      {section.Section}
+    </option>
+  ))}
+</select>
+
+
       <table className="border-collapse table-auto w-full text-sm">
         <thead>
           <tr>

@@ -7,7 +7,7 @@ const Menu = () => {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Link href="/">
-                <p className="text-white font-bold text-xl">Student Management</p>
+                <p className="text-white font-bold text-xl">ระบบจัดการ การศึกษา</p>
               </Link>
             </div>
             <div className="hidden md:block">

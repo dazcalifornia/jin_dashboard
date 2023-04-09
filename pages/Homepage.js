@@ -50,8 +50,9 @@ const Homepage = () => {
   };
 
   return (
+<>    
+    <Menu/>
     <div className="container mx-auto">  
-      <Menu />
       <Table data={Courses} handleEditCourseSuccess={handleEditCourseSuccess}/>
       {showToast && (
         
@@ -59,6 +60,7 @@ const Homepage = () => {
 
       )}
     </div>
+    </>
   );
 }
 export default Homepage;
