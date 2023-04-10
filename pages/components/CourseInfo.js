@@ -92,96 +92,84 @@ const handleEditGradeClick = (studentId) => {
     };
   };  
 return (
-    <Modal open={true} onClose={onClose}>
-      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Edit Course</h3>
-      </div>
+  <Modal open={true} onClose={onClose}>
+    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-lg">
+      <h3 className="text-lg leading-6 font-medium text-gray-900">
+       รายละเอียด
+      </h3>
+    </div>
 
+    <select
+      className="block w-full p-2 border border-gray-300 rounded-md"
+      value={selectedSec}
+      onChange={(e) => {
+        setSelectedSec(e.target.value);
+        if (e.target.value !== "") {
+          fetchCourse(e.target.value);
+        }
+      }}
+    >
+      <option value="">เลือกหมู่เรียน</option>
+      {sections.map((section) => (
+        <option key={section.section_id} value={section.Section}>
+          {section.Section}
+        </option>
+      ))}
+    </select>
 
-<select
-  className="block w-full p-2 border border-gray-300 rounded-md"
-  value={selectedSec}
-  onChange={(e) => {
-    setSelectedSec(e.target.value);
-    if (e.target.value !== '') {
-      fetchCourse(e.target.value);
-    }
-  }}
->
-  <option value="">Select a section</option>
-  {sections.map((section) => (
-    <option key={section.section_id} value={section.Section}>
-      {section.Section}
-    </option>
-  ))}
-</select>
-
-
-      <table className="border-collapse table-auto w-full text-sm">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">
-              Name
-            </th>
-            <th className="px-4 py-2">
-              subjectname
-            </th>
-            <th className="px-4 py-2">
-              Grade
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(course) && course.map((item) =>(
+    <table className="border-collapse table-auto w-full text-sm">
+      <thead>
+        <tr>
+          <th className="px-4 py-2">ชื่อนิสิต</th>
+          <th className="px-4 py-2">ชื่อวิชา</th>
+          <th className="px-4 py-2">เกรด</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Array.isArray(course) &&
+          course.map((item) => (
             <tr key={item.studentId} className="divide-y">
-
+              <td className="px-4 py-2">{item.Std_name}</td>
+              <td className="px-4 py-2">{item.Course_name}</td>
               <td className="px-4 py-2">
-                {item.Std_name}
+                {isEditingGrade === item.studentId ? (
+                  <div className="flex justify-center items-center">
+                    <input
+                      className="border rounded px-2 py-1 w-20 mr-2"
+                      type="text"
+                      value={passingData.grade}
+                      onChange={handleGradeChange}
+                    />
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={handleSaveGradeClick}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => setIsEditingGrade(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex justify-between">
+                    <span>{item.score}</span>
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleEditGradeClick(item.studentId)}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                )}
               </td>
-              <td className="px-4 py-2">
-  {item.Course_name}
-</td>
-<td className="px-4 py-2">
-  {isEditingGrade === item.studentId ?(
-    <div className="flex justify-center items-center">
-      <input
-        className="border rounded px-2 py-1 w-20 mr-2"
-        type="text"
-        
-        value={passingData.grade}
-        onChange={handleGradeChange}
-      />
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleSaveGradeClick}
-      >
-        Save
-      </button>
-      <button
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => setIsEditingGrade(false)}
-      >
-        Cancel
-      </button>
-    </div>
-  ) : (
-    <div className="flex justify-between">
-      <span>{item.score}</span>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => handleEditGradeClick(item.studentId)}
-      >
-        Edit
-      </button>
-    </div>
-  )}
-</td>
             </tr>
           ))}
-        </tbody>
-      </table>
-     
-</Modal>
+      </tbody>
+    </table>
+  </Modal>
 );
 };
 
