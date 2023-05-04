@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Grade;
+
 class SubjectController extends Controller
 {
   
@@ -13,7 +15,7 @@ public function edit(Request $request)
     $origin = $request->input('origin');
     $sections = $request->input('sections');
 
-    $course = Course::where('course_id', $origin)->first();
+    $course = Course::where('course_id', $courseId)->first();
     if (!$course) {
         return response()->json([
             'error' => 'Data update failed: Course not found',
