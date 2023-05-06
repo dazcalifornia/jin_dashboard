@@ -83,19 +83,24 @@ const handleUpdate = () => {
               </div>
               <div className="mt-4">
                 <label
-                  htmlFor="credit"
+                  htmlFor="section"
                   className="block text-sm font-medium text-gray-700"
                 >
                   หมู่เรียน
                 </label>
-                <input
-                  type="text"
-                  name="section"
+                <select
                   id="section"
-                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  name="section"
+                  className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   value={newCourse.section || ""}
                   onChange={handleInputChange}
-                />
+                >
+                {newCourse.sections.map((sectionObj) => (
+      <option key={sectionObj.Section} value={sectionObj.Section}>
+        {sectionObj.Section}
+      </option>
+    ))}
+                </select>
               </div>
 
               <div className="mt-4">
