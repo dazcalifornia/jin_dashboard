@@ -12,6 +12,7 @@ const Table = ({ data , handleEditCourseSuccess}) => {
 
   const handleEditClick = (course) => {
     // Set the selected course and open the modal
+    console.log(course)
     setSelectedCourse(course);
   };
 
