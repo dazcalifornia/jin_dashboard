@@ -31,7 +31,7 @@ export default function Home() {
         });
         const data = await response.json();
         if (data.success) {
-          router.push('/Homepage')
+          router.push('/homepage')
           setIsAuthenticated(true)
         } else {
           alert(data.message)

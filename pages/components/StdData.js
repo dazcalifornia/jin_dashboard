@@ -1,73 +1,83 @@
-import React,{
-  useState,
-  useEffect
-} from 'react'
+import React, { useState, useEffect } from "react";
 
-import Modal from './Modal'
+import Modal from "./Modal";
 
-const StdInfo = ({  student, onEdit, onClose ,handleEditCourseSuccess}) => {
-  const [isEdit, setIsEdit] = useState(false)
-  const [Student, setStudent] = useState(student)
-
+const StdInfo = ({ student, onEdit, onClose, handleEditCourseSuccess }) => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [Student, setStudent] = useState(student);
 
   const [isEditingGrade, setIsEditingGrade] = useState(false);
-  const [passingData, setPassingData] = useState({ grade: '', owner: '', subject: '' });
-  const [stdGrade, setStdGrade] = useState([]); //grade of the student 
+  const [passingData, setPassingData] = useState({
+    grade: "",
+    owner: "",
+    subject: "",
+    section: "",
+  });
+  const [stdGrade, setStdGrade] = useState([]); //grade of the student
+
 
   const getGrades = async () => {
     try {
       const response = await fetch(`http://localhost:8000/grades`);
       const data = await response.json();
-      //filter grade of the student_id 
+      //filter grade of the student_id
       setStdGrade(data.filter((grade) => grade.studentId === student.Id));
-      console.info("Student Grade:",data.filter((grade) => grade.studentId === student.Id));
+      console.info(
+        "Student Grade:",
+        data.filter((grade) => grade.studentId === student.Id)
+      );
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     getGrades();
   }, []);
 
   const handleEditClick = () => {
-    setIsEdit(true)
-  }
+    setIsEdit(true);
+  };
   const handleEditClose = () => {
-    setIsEdit(false)
-  }
+    setIsEdit(false);
+  };
   const handleEditSubmit = (student) => {
-    onEdit(student)
-    setIsEdit(false)
-  }
+    onEdit(student);
+    setIsEdit(false);
+  };
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setStudent({ ...student, [name]: value })
-  }
+    const { name, value } = e.target;
+    setStudent({ ...student, [name]: value });
+  };
 
   const handleEditGradeClick = (studentId) => {
-  console.log('clicked student ID:', studentId);
-  setIsEditingGrade(studentId);
-  console.log('isEditingGrade:', isEditingGrade);
-};
-
-const handleGradeChange = (e) => {
+    console.log("clicked student ID:", studentId);
+    console.log("iseditinSection:", passingData.section);
+    setIsEditingGrade(studentId);
+    console.log("isEditingGrade:", isEditingGrade);
+  };
+const validGrades = ["N/A","A", "B+", "B", "C+", "C", "D+", "D", "F", "W"];
+  const handleGradeChange = (e) => {
+    const enteredGrade = e.target.value.toUpperCase();
+  if (validGrades.includes(enteredGrade)) {
     setPassingData({
       ...passingData,
-      grade: e.target.value
+      grade: enteredGrade // add the selected section here
     });
+    console.log("passingData:", passingData);
+  }
   };
   const debug = () => {
     console.log(passingData);
   };
 
   const handleSaveGradeClick = async () => {
-    console.log('Saving grade', passingData);
+    console.log("Saving grade", passingData);
     try {
       const response = await fetch(`http://localhost:8000/editGrade`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(passingData),
       });
@@ -79,7 +89,7 @@ const handleGradeChange = (e) => {
         alert("Grade Updated");
         getGrades();
       } else {
-        console.error('Failed to update grade');
+        console.error("Failed to update grade");
       }
     } catch (err) {
       console.error(err);
@@ -105,7 +115,7 @@ const handleGradeChange = (e) => {
             >
               ข้อมูลนักศึกษา : {student.name}
             </h3>
-            <div className="divide-emerald-200"/>
+            <div className="divide-emerald-200" />
             <div className="mt-2">
               <div>
                 <label
@@ -113,106 +123,117 @@ const handleGradeChange = (e) => {
                   className="block text-sm font-medium text-gray-700"
                 >
                   รหัสนักศึกษา : {student.Id}
-                  
                 </label>
               </div>
               <div className="mt-4">
-               
-                  <label
-                    htmlFor="student_name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    ชื่อนักศึกษา : {student.name} 
-                  
-                  </label>
-                  
+                <label
+                  htmlFor="student_name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  ชื่อนักศึกษา : {student.name}
+                </label>
               </div>
               <div className="mt-4">
-                <label htmlFor="student_name" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="student_name"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   สาขา : {student.Major}
                 </label>
               </div>
               <div className="mt-4">
-                <label htmlFor="student_name" className="block text-sm font-medium text-gray-700">
-                    โรงเรียนที่สำเร็จการศึกษา : {student.School}
+                <label
+                  htmlFor="student_name"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  โรงเรียนที่สำเร็จการศึกษา : {student.School}
                 </label>
               </div>
 
-            <section className="text-gray-600 body-font">
-              
-                  <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">ผลการเรียน</h1>
-                  <table className="border-collapse table-auto w-full text-sm" >
-                        <thead>
-                          <tr>
-                            <th className="px-4 py-2">รหัสวิชา</th>
-                            <th className="px-4 py-2">ชื่อวิชา</th>
-                            <th className="px-4 py-2">หมู่</th>
-                            <th className="px-4 py-2">เกรด</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {stdGrade.map((grade) => (
-                          <tr key={grade.studentId}>
-                            <td className=" px-4 py-2">{grade.courseId}</td>
-                            <td className=" px-4 py-2">{grade.Course_name}</td>
-                            <td className=" px-4 py-2">{grade.Section}</td>
-                            <td className=" px-4 py-2">
-                            {isEditingGrade === grade.courseId ? (
-                              <div className="flex justify-center items-center">
-      <input
-        className="border rounded px-2 py-1 w-20 mr-2"
-        type="text"
-        
-        value={passingData.grade}
-        onChange={handleGradeChange}
-      />
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleSaveGradeClick}
-      >
-        ✔
-      </button>
-      <button
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => setIsEditingGrade(false)}
-      >
-        ✖      </button>
-    </div>
-                            ) : (
-                              <div className="flex justify-between">
-      <span>{grade.score}</span>
+              <section className="text-gray-600 body-font">
+                <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">
+                  ผลการเรียน
+                </h1>
+                <table className="border-collapse table-auto w-full text-sm">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">รหัสวิชา</th>
+                      <th className="px-4 py-2">ชื่อวิชา</th>
+                      <th className="px-4 py-2">หมู่</th>
+                      <th className="px-4 py-2">เกรด</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stdGrade.map((grade) => (
+                      <tr key={grade.studentId}>
+                        <td className=" px-4 py-2">{grade.courseId}</td>
+                        <td className=" px-4 py-2">{grade.Course_name}</td>
+                        <td className=" px-4 py-2">{grade.Section}</td>
+                        <td className=" px-4 py-2">
+                          {isEditingGrade === grade.courseId ? (
+                            <div className="flex justify-center items-center">
+                              
+                              <select
+                              className="border rounded px-2 py-1 mr-2"
+                              value={passingData.grade}
+                              onChange={handleGradeChange}
+                            >
+                              <option value="N/A">N/A</option>
+                              <option value="A">A</option>
+                              <option value="B+">B+</option>
+                              <option value="B">B</option>
+                              <option value="C+">C+</option>
+                              <option value="C">C</option>
+                              <option value="D+">D+</option>
+                              <option value="D">D</option>
+                              <option value="F">F</option>
+                              <option value="W">W</option>
+                            </select>
+                              <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={handleSaveGradeClick}
+                              >
+                                ✔
+                              </button>
+                              <button
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => setIsEditingGrade(false)}
+                              >
+                                ✖{" "}
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex justify-between">
+                              <span>{grade.score}</span>
 
                               <button
-  className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
-  onClick={() => 
-    {
-      handleEditGradeClick(grade.courseId);
-      // set passingData with studentId and courseId 
-      setPassingData({
-        ...passingData,
-        owner: student.Id,
-        subject: grade.courseId,
-      });
-    }
-  }
->
+                                className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => {
+                                  handleEditGradeClick(grade.courseId);
+                                  // set passingData with studentId and courseId
+                                  setPassingData({
+                                    ...passingData,
+                                    owner: student.Id,
+                                    subject: grade.courseId,
+                                    section: grade.Section,
+                                  });
+                                }}
+                              >
                                 แก้ไข
                               </button>
                             </div>
-                            )}
-                            </td>
-                          </tr>
-                          ))}
-                        </tbody>
-                      </table>
-
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </section>
-
             </div>
           </div>
         </div>
       </div>
     </Modal>
-  )
-}
-export default StdInfo
+  );
+};
+export default StdInfo;

@@ -28,6 +28,11 @@ $router->post('/grades/upload', 'GradesController@upload');
 $router->get('/grades/{id}/{section}', 'GradesController@show');
 $router->get('/grades/{courseId}', 'GradesController@findSectionByCourseId');
 
+
+$router->post('/createStudent', 'StudentController@create');
+
+
+
 $router->get('/api', function () {
     try {
         DB::connection()->getPdo();

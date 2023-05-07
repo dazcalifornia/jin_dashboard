@@ -46,10 +46,12 @@ class GradesController extends Controller
         $grade = $request->input('grade');
         $owner = $request->input('owner');
         $subject = $request->input('subject');
+        $section = $request->input('section');
 
         $result = Grade::where('studentId', $owner)
-            ->where('courseId', $subject)
-            ->update(['score' => $grade]);
+        ->where('courseId', $subject)
+        ->where('section', $section)
+        ->update(['score' => $grade]);
 
         if ($result) {
             return response()->json([
@@ -60,7 +62,7 @@ class GradesController extends Controller
                 'error' => 'Data update failed'
             ]);
         }
-  }
+    }
    public function upload(Request $request)
 {
     $data = $request->json()->all();

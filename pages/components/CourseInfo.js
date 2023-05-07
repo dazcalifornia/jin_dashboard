@@ -5,7 +5,7 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
   const [course, setCourse] = useState([]);
   const [sections, setSections] = useState([]);
   const [selectedSec, setSelectedSec] = useState(null);
-  const [passingData, setPassingData] = useState({ grade: '', owner: '', subject: '' });
+  const [passingData, setPassingData] = useState({ grade: '', owner: '', subject: '', section: '' });
   const [isEditingGrade, setIsEditingGrade] = useState(false);
 
   useEffect(() => {
@@ -28,6 +28,7 @@ const CourseInfo = ({ courseId, onEdit, onClose, handleEditCourseSuccess }) => {
   setPassingData(prevPassingData => ({
     ...prevPassingData,
     owner: course.length ? course[0].studentId : '',
+    section: course.length ? course[0].sectionId : '',
     subject: course.length ? course[0].courseId : ''
   }));
 }, [course]);
@@ -53,10 +54,12 @@ const handleGradeChange = (e) => {
   if (validGrades.includes(enteredGrade)) {
     setPassingData({
       ...passingData,
-      grade: enteredGrade
+      grade: enteredGrade,
+      section: selectedSec // add the selected section here
     });
   }
 };
+
 
   const debug = () => {
     console.log(passingData);
@@ -89,11 +92,10 @@ const handleSaveGradeClick = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(course), // updated
+      body: JSON.stringify(passingData),
     });
 
     if (response.ok) {
-      // If the update was successful, remove the score ID from the state
       setIsEditingGrade(false);
       handleEditCourseSuccess();
     } else {
@@ -103,6 +105,8 @@ const handleSaveGradeClick = async () => {
     console.error(err);
   }
 };
+
+
 
   const handleUpdate = () => {
     // Set the updated_at field to the current date and time
@@ -115,7 +119,7 @@ return (
   <Modal open={true} onClose={onClose}>
     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-lg">
       <h3 className="text-lg leading-6 font-medium text-gray-900">
-       รายละเอียด
+        รายละเอียด
       </h3>
     </div>
 
@@ -131,7 +135,13 @@ return (
     >
       <option value="">เลือกหมู่เรียน</option>
       {sections.map((section) => (
-        <option key={section.section_id} value={section.Section}>
+        <option
+          key={section.section_id}
+          value={section.Section}
+          onChange={(e) => {
+            setSelectedSec(e.target.value);
+          }}
+        >
           {section.Section}
         </option>
       ))}
@@ -153,36 +163,35 @@ return (
               <td className="px-4 py-2">{item.Course_name}</td>
               <td className="px-4 py-2">
                 {isEditingGrade === item.studentId ? (
-                  
-<div className="flex justify-center items-center">
-  <select
-    className="border rounded px-2 py-1 mr-2"
-    value={passingData.grade}
-    onChange={handleGradeChange}
-  >
-    <option value="A">A</option>
-    <option value="B+">B+</option>
-    <option value="B">B</option>
-    <option value="C+">C+</option>
-    <option value="C">C</option>
-    <option value="D+">D+</option>
-    <option value="D">D</option>
-    <option value="F">F</option>
-    <option value="W">W</option>
-  </select>
-  <button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    onClick={handleSaveGradeClick}
-  >
-    Save
-  </button>
-  <button
-    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-    onClick={() => handleCancelClick()}
-  >
-    Cancel
-  </button>
-</div>
+                  <div className="flex justify-center items-center">
+                    <select
+                      className="border rounded px-2 py-1 mr-2"
+                      value={passingData.grade}
+                      onChange={handleGradeChange}
+                    >
+                      <option value="A">A</option>
+                      <option value="B+">B+</option>
+                      <option value="B">B</option>
+                      <option value="C+">C+</option>
+                      <option value="C">C</option>
+                      <option value="D+">D+</option>
+                      <option value="D">D</option>
+                      <option value="F">F</option>
+                      <option value="W">W</option>
+                    </select>
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={handleSaveGradeClick}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleCancelClick()}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 ) : (
                   <div className="flex justify-between">
                     <span>{item.score}</span>
