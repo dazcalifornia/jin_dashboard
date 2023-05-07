@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 
 export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [formData,setFormdata] = useState({email:"",password:""})
   
   const router = useRouter()
