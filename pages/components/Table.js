@@ -77,8 +77,8 @@ const filterData = (data, query, column, order) => {
 const filteredData = filterData(data, searchQuery, sortColumn, sortOrder);
   return (
     <div className="flex flex-col mt-10">
-      <div className="mb-4 flex items-center">
-        <label htmlFor="search" className="mr-2 font-bold text-white">
+      <div className="mb-4 flex items-center space-x-4">
+        <label htmlFor="search" className="mr-2 font-bold text-black">
           ค้นหา:
         </label>
         <input
@@ -88,7 +88,7 @@ const filteredData = filterData(data, searchQuery, sortColumn, sortOrder);
           onChange={(e) => setSearchQuery(e.target.value)}
           className="border border-gray-300 p-1 rounded-md"
         />
-        <label htmlFor="sort" className="mr-2 font-bold text-white">
+        <label htmlFor="sort" className="mr-2 font-bold text-black">
           เรียงตาม:
         </label>
         <select

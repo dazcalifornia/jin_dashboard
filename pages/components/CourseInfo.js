@@ -121,7 +121,7 @@ return (
       <h3 className="text-lg leading-6 font-medium text-gray-900">
         รายละเอียด
       </h3>
-    </div>
+
 
     <select
       className="block w-full p-2 border border-gray-300 rounded-md"
@@ -208,6 +208,7 @@ return (
           ))}
       </tbody>
     </table>
+    </div>
   </Modal>
 );
 };

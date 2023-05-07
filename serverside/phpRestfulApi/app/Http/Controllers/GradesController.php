@@ -50,7 +50,7 @@ class GradesController extends Controller
 
         $result = Grade::where('studentId', $owner)
         ->where('courseId', $subject)
-        ->where('section', $section)
+        ->where('Section', $section)
         ->update(['score' => $grade]);
 
         if ($result) {

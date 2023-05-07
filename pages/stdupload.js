@@ -117,7 +117,7 @@ import React,{
       <>
         <Menu />
         <div className="flex flex-col items-center justify-center min-h-screen">
-          <h1 className="text-3xl font-bold mb-4">อัพโหลดเกรดรายวิชา</h1>
+          <h1 className="text-3xl font-bold mb-4">อัพโหลดรายชื่อนิสิต</h1>
   
           <div
             className="w-full max-w-md mx-auto p-4 border border-gray-300 rounded-md bg-white"
@@ -125,7 +125,7 @@ import React,{
             onDrop={handleDrop}
           >
             <label className="text-gray-700 font-bold mb-2" htmlFor="file-upload">
-              Choose Excel file(s) to upload
+              เลือกไฟล์เพื่ออัพโหลด
             </label>
             <input
               className="hidden"
@@ -136,11 +136,12 @@ import React,{
               onChange={handleFileUpload}
             />
             <div className="p-4 border border-dashed border-gray-400 rounded-md text-gray-400 text-center">
-              <p>Drag and drop Excel files here</p>
-              <p>or</p>
-              <label className="cursor-pointer underline" htmlFor="file-upload">
-                click to select files
-              </label>
+             <p>ลากไฟล์ Excel หรือ csv มาใส่ในช่องนี้</p>
+            <p>หรือ</p>
+            <label className="cursor-pointer underline" htmlFor="file-upload">
+             คลิกเพื่อเลือกไฟล์ อัพโหลด
+            </label>
+
             </div>
             {files.length > 0 && (
               <div>
@@ -165,12 +166,7 @@ import React,{
                 >
                   อัพโหลด
                 </button>
-                <button
-                  className="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded mt-4"
-                  onClick={viewData}
-                >
-                  ดูข้อมูล
-                </button>
+                
               </div>
             )}
           </div>

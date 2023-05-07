@@ -4,18 +4,9 @@ import { useRouter } from 'next/router'
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [formData,setFormdata] = useState({email:"",password:""})
+  
   const router = useRouter()
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   if(formData.email === "" || formData.password ==="" ){
-  //     alert('please enter your email or password')
-  //   }else{
-  //     router.push('/dashboard')
-  //     setIsAuthenticated('true')
-  //   }
-  //   console.log(formData)
-  // }
   const handleSubmit = async (event) => {
     event.preventDefault();
     if(formData.email === "" || formData.password ==="" ){

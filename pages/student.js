@@ -76,30 +76,30 @@ const StudentPage = () => {
       <Menu />
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
-          <div className="mb-4 flex items-center">
-            <label htmlFor="search" className="mr-2 font-bold text-white">
+          <div className="mb-4 flex items-center space-x-1">
+            <label htmlFor="search" className="mr-2 font-bold text-black">
               ค้นหา:
             </label>
             <input
               id="search"
               type="text"
-              className="border border-gray-300 p-1 rounded-md"
+              className="border border-gray-300 p-1 rounded-md w-1/3"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <label htmlFor="sort" className="mr-2 font-bold text-white">
+            <label htmlFor="sort" className="mr-2 font-bold text-black">
               เรียงตาม:
             </label>
             <select
               id="sort"
               value={sortColumn}
               onChange={(e) => setSortColumn(e.target.value)}
-              className="border border-gray-300 p-1 rounded-md"
+              className="border border-gray-300 p-1 rounded-md w-40"
             >
-              <option value="">None</option>
-              <option value="Id">Student ID</option>
-              <option value="name">Name</option>
-              <option value="Major">Major</option>
+              <option value="">ไม่เรียง</option>
+              <option value="Id">รหัสนิสิต</option>
+              <option value="name">ชื่อ</option>
+              <option value="Major">สาขา</option>
             </select>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
@@ -120,7 +120,7 @@ const StudentPage = () => {
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                           onClick={() => handleSortClick("Id")}
                         >
-                          Student ID
+                          รหัสนิสิต
                           {sortColumn === "Id" && (
                             <span className="ml-1">
                               {sortOrder === "asc" ? "▼" : "▲"}
@@ -132,7 +132,7 @@ const StudentPage = () => {
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                           onClick={() => handleSortClick("name")}
                         >
-                          Name
+                          ชื่อ
                           {sortColumn === "name" && (
                             <span className="ml-1">
                               {sortOrder === "asc" ? "▼" : "▲"}
@@ -144,7 +144,7 @@ const StudentPage = () => {
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                           onClick={() => handleSortClick("Major")}
                         >
-                          Major
+                          สาขา
                           {sortColumn === "Major" && (
                             <span className="ml-1">
                               {sortOrder === "asc" ? "▼" : "▲"}

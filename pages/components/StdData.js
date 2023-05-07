@@ -88,6 +88,8 @@ const validGrades = ["N/A","A", "B+", "B", "C+", "C", "D+", "D", "F", "W"];
         handleEditCourseSuccess();
         alert("Grade Updated");
         getGrades();
+        console.log("Grade Updated");
+        alert("Grade Updated");
       } else {
         console.error("Failed to update grade");
       }
@@ -131,6 +133,14 @@ const validGrades = ["N/A","A", "B+", "B", "C+", "C", "D+", "D", "F", "W"];
                   className="block text-sm font-medium text-gray-700"
                 >
                   ชื่อนักศึกษา : {student.name}
+                </label>
+              </div>
+              <div className="mt-4">
+                <label
+                  htmlFor="student_sex"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  เพศ : {student.gender == 1 ? "ชาย" : "หญิง"}
                 </label>
               </div>
               <div className="mt-4">
